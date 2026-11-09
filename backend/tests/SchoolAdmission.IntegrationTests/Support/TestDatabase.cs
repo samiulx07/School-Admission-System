@@ -4,6 +4,15 @@ namespace SchoolAdmission.IntegrationTests.Support;
 
 internal static class TestDatabase
 {
+    internal static async Task<string> HoldStatusAsync(Guid holdId, CancellationToken cancellationToken)
+    {
+        await using var connection = new NpgsqlConnection(IntegrationEnvironment.DatabaseConnectionString());
+        await connection.OpenAsync(cancellationToken);
+        await using var command = new NpgsqlCommand("SELECT status FROM admissions.holds WHERE id = @id", connection);
+        command.Parameters.AddWithValue("id", holdId);
+        return Assert.IsType<string>(await command.ExecuteScalarAsync(cancellationToken));
+    }
+
     internal static async Task BackdateHoldAsync(Guid holdId, CancellationToken cancellationToken)
     {
         await using var connection = new NpgsqlConnection(IntegrationEnvironment.DatabaseConnectionString());

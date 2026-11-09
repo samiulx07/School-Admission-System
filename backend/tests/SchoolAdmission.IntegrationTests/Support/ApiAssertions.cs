@@ -6,6 +6,14 @@ namespace SchoolAdmission.IntegrationTests.Support;
 
 internal static class ApiAssertions
 {
+    internal static async Task HoldStatusAsync(ApiTestClient api, Guid holdId, string expectedStatus, CancellationToken cancellationToken)
+    {
+        using var response = await api.SendAsync(HttpMethod.Get, $"/holds/{holdId}", cancellationToken);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var hold = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
+        Assert.Equal(expectedStatus, hold.GetProperty("status").GetString());
+    }
+
     internal static async Task ClassCountsAsync(ApiTestClient api, Guid classId, int held, int confirmed, int available, CancellationToken cancellationToken)
     {
         using var response = await api.SendAsync(HttpMethod.Get, $"/classes/{classId}", cancellationToken);

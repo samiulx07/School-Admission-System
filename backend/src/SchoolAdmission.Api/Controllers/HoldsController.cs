@@ -9,6 +9,19 @@ namespace SchoolAdmission.Api.Controllers;
 [Route("holds")]
 public sealed class HoldsController(HoldService holds) : ControllerBase
 {
+    [HttpDelete("{holdId}")]
+    public async Task<IActionResult> Cancel(Guid holdId, CancellationToken cancellationToken)
+    {
+        var identity = StudentIdentity.Read(Request);
+        if (!identity.IsSuccess)
+        {
+            return ApplicationProblems.FromError(this, identity.Error!);
+        }
+
+        var result = await holds.CancelAsync(holdId, identity.Value, cancellationToken);
+        return result.IsSuccess ? NoContent() : ApplicationProblems.FromError(this, result.Error!);
+    }
+
     [HttpPost("{holdId}/confirm")]
     public async Task<ActionResult<ConfirmedHold>> Confirm(Guid holdId, CancellationToken cancellationToken)
     {

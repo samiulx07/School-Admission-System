@@ -79,6 +79,7 @@ To author a new migration, restore the pinned EF tool with `dotnet tool restore`
 | `POST /classes/{classId}/holds` with `X-Student-Id` | `201` with `{holdId,classId,studentId,status,expiresAt,createdAt,serverNow}` |
 | `GET /holds/{holdId}` | `200` with the hold's current status and timestamps |
 | `POST /holds/{holdId}/confirm` with `X-Student-Id` | `200` with `{holdId,status:"CONFIRMED"}` |
+| `DELETE /holds/{holdId}` with `X-Student-Id` | `204` with an empty body |
 | `GET /me/holds` with `X-Student-Id` | `200` with the current student's application history and class names |
 
 Summaries include `id`, `name`, `totalSeats`, `heldSeats`, `confirmedSeats`, and `availableSeats`. These endpoints require no identity header. Counts come from PostgreSQL in one projected query; expired pending holds do not occupy seats.
@@ -91,7 +92,9 @@ Reservations use short `READ COMMITTED` PostgreSQL transactions. Every allocatio
 
 Only the owner can confirm an unexpired pending hold. Repeating that owner's successful confirmation returns `200` without allocating another seat, including after the original deadline. Ownership is checked before idempotent success. The confirmation decision uses fresh database time after any class-lock wait.
 
-Invalid input returns `400`; another student's confirmation returns `403`; missing resources return `404`; exhausted capacity, duplicate active applications, or non-confirmable holds return `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Cancellation is added in its own feature commit.
+Only the owner can cancel an unexpired pending hold. Cancellation releases its seat; repeating the owner's cancellation returns an empty `204`. Confirmed admissions are final and expired holds cannot be cancelled. After cancellation, the student may create a new hold. Concurrent confirmation and cancellation serialize on the same class lock, so exactly one transition wins.
+
+Invalid input returns `400`; changing another student's hold returns `403`; missing resources return `404`; exhausted capacity, duplicate active applications, or forbidden lifecycle transitions return `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`.
 
 ## Selected stack
 
