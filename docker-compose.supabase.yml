@@ -1,0 +1,11 @@
+# Explicit opt-in. Never used by default local startup or isolated tests.
+services:
+  db:
+    profiles: [local-database]
+  migrate:
+    environment:
+      ConnectionStrings__Migrations: ${SUPABASE_MIGRATION_CONNECTION_STRING:?Set your private migration connection in .env}
+    depends_on: !reset {}
+  backend:
+    environment:
+      ConnectionStrings__Admissions: ${SUPABASE_DB_CONNECTION_STRING:?Set your private runtime connection in .env}

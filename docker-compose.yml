@@ -1,0 +1,124 @@
+name: school-admission-system
+
+x-api: &api
+  restart: unless-stopped
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+    target: runtime
+  environment: &api-environment
+    ConnectionStrings__Admissions: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only
+    Admission__HoldDurationSeconds: ${HOLD_DURATION_SECONDS:-600}
+    Cors__FrontendOrigin: ${FRONTEND_ORIGIN:-http://localhost:3000}
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+
+services:
+  db:
+    restart: unless-stopped
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: admissions
+      POSTGRES_USER: admissions
+      POSTGRES_PASSWORD: local-development-only
+    volumes:
+      - admissions-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admissions -d admissions"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: runtime
+    command: ["--migrate"]
+    healthcheck:
+      disable: true
+    environment:
+      ConnectionStrings__Migrations: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    <<: *api
+    ports:
+      - "8080:8080"
+
+  test-db:
+    profiles: [test]
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: admissions_test
+      POSTGRES_USER: admissions_test
+      POSTGRES_PASSWORD: local-test-only
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admissions_test -d admissions_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  test-migrate:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: runtime
+    command: ["--migrate"]
+    healthcheck:
+      disable: true
+    environment:
+      ConnectionStrings__Migrations: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+    depends_on:
+      test-db:
+        condition: service_healthy
+
+  test-api:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: runtime
+    environment: &test-api-environment
+      ConnectionStrings__Admissions: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+      Admission__HoldDurationSeconds: 60
+      Cors__FrontendOrigin: http://localhost:3000
+    depends_on:
+      test-migrate:
+        condition: service_completed_successfully
+
+  test-api-secondary:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: runtime
+    environment: *test-api-environment
+    depends_on:
+      test-migrate:
+        condition: service_completed_successfully
+
+  backend-tests:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: test-runner
+    environment:
+      TEST_API_URL: http://test-api:8080
+      TEST_SECONDARY_API_URL: http://test-api-secondary:8080
+      TEST_DB_CONNECTION_STRING: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+    depends_on:
+      test-api:
+        condition: service_healthy
+      test-api-secondary:
+        condition: service_healthy
+
+volumes:
+  admissions-data:

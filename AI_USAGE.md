@@ -11,5 +11,6 @@ OpenAI Codex assists with requirements review, implementation planning, code, te
 - Context7 confirmed that EF migrations should use `MigrateAsync` without a surrounding application transaction or `EnsureCreated`. Reservation operations will use their own explicit, parameterized PostgreSQL transactions.
 - The initial backend scaffold passed locked restore, a Release build with zero warnings/errors, formatting verification, and an HTTP liveness smoke check. Feature tests are added with their respective features.
 - The domain model passed 27 unit cases on .NET SDK 10.0.403, including strict string identifiers, expiry boundaries and terminal/idempotent lifecycle transitions. Capacity and ownership still require their application/database feature tests.
+- The database foundation passed fresh and repeated migrations, HTTP readiness, a Docker Release build, and both real PostgreSQL schema tests. The exact staged source was verified separately from prepared endpoint work. WSL's idle shutdown interrupted an initial run; keeping the WSL session active restored stable Docker verification. No cloud database was accessed.
 
 Feature-specific implementation corrections and actual verification results will be added as they occur. Test results and tool usage will not be claimed before they have run.
