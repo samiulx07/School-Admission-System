@@ -7,6 +7,10 @@ namespace SchoolAdmission.Infrastructure.Holds;
 
 internal sealed class HoldQueries(AdmissionsDbContext database) : IHoldQueries
 {
+    public Task<Guid?> FindClassIdAsync(Guid holdId, CancellationToken cancellationToken) =>
+        database.Holds.AsNoTracking().Where(hold => hold.Id == holdId)
+            .Select(hold => (Guid?)hold.ClassId).SingleOrDefaultAsync(cancellationToken);
+
     public async Task<HoldDetails?> FindAsync(Guid holdId, CancellationToken cancellationToken)
     {
         var hold = await database.Holds.AsNoTracking().Where(hold => hold.Id == holdId)

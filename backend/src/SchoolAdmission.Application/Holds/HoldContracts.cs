@@ -13,6 +13,8 @@ public sealed record HoldDetails(Guid HoldId, Guid ClassId, string Status,
 public sealed record StudentHold(Guid HoldId, Guid ClassId, string ClassName, string Status,
     DateTimeOffset ExpiresAt, DateTimeOffset CreatedAt, DateTimeOffset ServerNow);
 
+public sealed record ConfirmedHold(Guid HoldId, string Status);
+
 public static class HoldStatusNames
 {
     public static string Format(HoldStatus status) => status switch

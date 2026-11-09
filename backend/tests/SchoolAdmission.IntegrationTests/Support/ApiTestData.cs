@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace SchoolAdmission.IntegrationTests.Support;
 
@@ -9,6 +10,14 @@ internal static class ApiTestData
     private static long studentSequence = DateTimeOffset.UtcNow.Ticks % 100_000_000_000_000_000L;
 
     internal static string NewStudentId() => Interlocked.Increment(ref studentSequence).ToString("D17", CultureInfo.InvariantCulture);
+
+    internal static async Task<Guid> CreateHoldAsync(ApiTestClient api, Guid classId, string studentId, CancellationToken cancellationToken)
+    {
+        using var response = await api.SendAsync(HttpMethod.Post, $"/classes/{classId}/holds", cancellationToken, studentId: studentId);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var hold = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
+        return hold.GetProperty("holdId").GetGuid();
+    }
 
     internal static async Task<Guid> CreateClassAsync(ApiTestClient api, int totalSeats, CancellationToken cancellationToken, string? name = null)
     {

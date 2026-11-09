@@ -78,6 +78,7 @@ To author a new migration, restore the pinned EF tool with `dotnet tool restore`
 | `GET /classes/{classId}` | `200` with one seat summary |
 | `POST /classes/{classId}/holds` with `X-Student-Id` | `201` with `{holdId,classId,studentId,status,expiresAt,createdAt,serverNow}` |
 | `GET /holds/{holdId}` | `200` with the hold's current status and timestamps |
+| `POST /holds/{holdId}/confirm` with `X-Student-Id` | `200` with `{holdId,status:"CONFIRMED"}` |
 | `GET /me/holds` with `X-Student-Id` | `200` with the current student's application history and class names |
 
 Summaries include `id`, `name`, `totalSeats`, `heldSeats`, `confirmedSeats`, and `availableSeats`. These endpoints require no identity header. Counts come from PostgreSQL in one projected query; expired pending holds do not occupy seats.
@@ -88,7 +89,9 @@ Reservations use short `READ COMMITTED` PostgreSQL transactions. Every allocatio
 
 `HOLD_DURATION_SECONDS` defaults to `600`. A hold's `serverNow` lets the frontend account for clock differences. Expired pending holds immediately read as `EXPIRED`; reservation transactions persist expiry before reapplication. The autonomous expiry worker is added in its own feature.
 
-Invalid input returns `400`; missing resources return `404`; exhausted capacity or an existing active application returns `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Confirmation and cancellation are added with their own feature commits.
+Only the owner can confirm an unexpired pending hold. Repeating that owner's successful confirmation returns `200` without allocating another seat, including after the original deadline. Ownership is checked before idempotent success. The confirmation decision uses fresh database time after any class-lock wait.
+
+Invalid input returns `400`; another student's confirmation returns `403`; missing resources return `404`; exhausted capacity, duplicate active applications, or non-confirmable holds return `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Cancellation is added in its own feature commit.
 
 ## Selected stack
 
