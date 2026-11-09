@@ -10,5 +10,6 @@ OpenAI Codex assists with requirements review, implementation planning, code, te
 - Publisher metadata showed that selecting every dependency's latest major would conflict with the Next.js lint toolchain. Compatible supported versions will be pinned and verified through installation, builds, and tests.
 - Context7 confirmed that EF migrations should use `MigrateAsync` without a surrounding application transaction or `EnsureCreated`. Reservation operations will use their own explicit, parameterized PostgreSQL transactions.
 - The initial backend scaffold passed locked restore, a Release build with zero warnings/errors, formatting verification, and an HTTP liveness smoke check. Feature tests are added with their respective features.
+- The domain model passed 27 unit cases on .NET SDK 10.0.403, including strict string identifiers, expiry boundaries and terminal/idempotent lifecycle transitions. Capacity and ownership still require their application/database feature tests.
 
 Feature-specific implementation corrections and actual verification results will be added as they occur. Test results and tool usage will not be claimed before they have run.
