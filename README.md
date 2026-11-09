@@ -6,6 +6,18 @@ A concurrency-safe admission API and React portal for reserving and confirming l
 
 Implementation proceeds in small verified commits: backend first, then the frontend after the backend completion review. The API, Docker configuration, and frontend instructions are added alongside their working features.
 
+The backend solution now contains Domain, Application, Infrastructure, and API projects, plus separate unit and PostgreSQL integration test projects. Package versions are centrally pinned and restore lockfiles are committed.
+
+With a .NET 10 SDK installed, verify the initial scaffold with:
+
+```sh
+dotnet restore backend/SchoolAdmission.slnx --locked-mode
+dotnet build backend/SchoolAdmission.slnx --configuration Release --no-restore
+dotnet format backend/SchoolAdmission.slnx --no-restore --verify-no-changes
+```
+
+`/health/live` checks that the HTTP host is running. Database readiness is added with database configuration.
+
 ## Selected stack
 
 - ASP.NET Core, Entity Framework Core, Npgsql, and PostgreSQL.
