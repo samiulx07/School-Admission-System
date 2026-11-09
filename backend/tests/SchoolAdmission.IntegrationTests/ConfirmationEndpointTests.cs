@@ -38,6 +38,26 @@ public sealed class ConfirmationEndpointTests
     }
 
     [IntegrationFact]
+    public async Task ConfirmedStudentCannotApplyAgainEvenWhenTheClassHasSpareCapacity()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        using var api = new ApiTestClient();
+        var classId = await ApiTestData.CreateClassAsync(api, 2, cancellationToken);
+        var studentId = ApiTestData.NewStudentId();
+        var holdId = await ApiTestData.CreateHoldAsync(api, classId, studentId, cancellationToken);
+        await AssertConfirmedAsync(api, holdId, studentId, cancellationToken);
+
+        using var duplicate = await api.SendAsync(HttpMethod.Post, $"/classes/{classId}/holds", cancellationToken, studentId: studentId);
+        await ApiAssertions.ProblemAsync(duplicate, HttpStatusCode.Conflict, cancellationToken, "active_application_exists");
+        await ApiAssertions.ClassCountsAsync(api, classId, 0, 1, 1, cancellationToken);
+        await ApiTestData.CreateHoldAsync(api, classId, ApiTestData.NewStudentId(), cancellationToken);
+        using var repeatedDuplicate = await api.SendAsync(HttpMethod.Post, $"/classes/{classId}/holds", cancellationToken, studentId: studentId);
+        await ApiAssertions.ProblemAsync(repeatedDuplicate, HttpStatusCode.Conflict, cancellationToken, "active_application_exists");
+        await ApiAssertions.ClassCountsAsync(api, classId, 1, 1, 0, cancellationToken);
+        await TestDatabase.AssertHoldCountsAsync(classId, 1, 1, cancellationToken);
+    }
+
+    [IntegrationFact]
     public async Task OnlyTheOwnerCanConfirmPendingOrAlreadyConfirmedApplications()
     {
         var cancellationToken = TestContext.Current.CancellationToken;

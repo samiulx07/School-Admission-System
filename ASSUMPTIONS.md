@@ -1,7 +1,7 @@
 # Assumptions
 
 - Each class/shift combination is an independent admission class.
-- Class names are trimmed and limited to 1–200 characters. Capacity is a positive 32-bit integer; duplicate display names are allowed for independent classes.
+- Class names are trimmed and limited to 1–200 characters, excluding NUL because PostgreSQL character data cannot store it. Capacity is a positive 32-bit integer; duplicate display names are allowed for independent classes.
 - Identity is a 17-character ASCII-digit birth registration number. There is no login or real payment gateway.
 - Only pending holds may be cancelled. Confirmed admissions are final.
 - Duplicate active applications return a conflict; expired/cancelled applications permit reapplication. Different classes may be applied to independently.

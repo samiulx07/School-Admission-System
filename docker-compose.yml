@@ -112,7 +112,7 @@ services:
       target: runtime
     environment:
       <<: *test-api-environment
-      Admission__HoldDurationSeconds: 3
+      HOLD_DURATION_SECONDS: 3
     depends_on:
       test-migrate:
         condition: service_completed_successfully

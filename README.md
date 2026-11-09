@@ -60,7 +60,7 @@ The override requires both private connection strings and removes the local data
 
 Application tables and EF history live in the private `admissions` schema. Migrations revoke access from `PUBLIC` and, when present, Supabase's `anon`/`authenticated` roles. Keep this schema out of exposed Data API schemas. If using distinct database roles, the migration role needs schema DDL permissions; grant the runtime role `USAGE` on `admissions` and `SELECT, INSERT, UPDATE` on its tables. The runtime role does not run migrations.
 
-For native .NET execution, set `ConnectionStrings__Admissions`, `Admission__HoldDurationSeconds`, and `Cors__FrontendOrigin` explicitly in the process environment. .NET does not load `.env` automatically. Migration mode uses only `ConnectionStrings__Migrations`:
+For native .NET execution, set `ConnectionStrings__Admissions`, `HOLD_DURATION_SECONDS`, and `Cors__FrontendOrigin` explicitly in the process environment. `HOLD_DURATION_SECONDS`, when present, overrides `Admission__HoldDurationSeconds`; otherwise that nested setting or the default `600` is used. .NET does not load `.env` automatically. Migration mode uses only `ConnectionStrings__Migrations`:
 
 ```sh
 dotnet run --project backend/src/SchoolAdmission.Api -- --migrate

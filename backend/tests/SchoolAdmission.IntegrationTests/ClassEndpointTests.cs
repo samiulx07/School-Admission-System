@@ -67,6 +67,18 @@ public sealed class ClassEndpointTests
     }
 
     [IntegrationFact]
+    public async Task ClassNamesWithNullCharactersReturnAValidationError()
+    {
+        var cancellationToken = TestContext.Current.CancellationToken;
+        using var api = new ApiTestClient();
+        foreach (var name in new[] { "\0", "Class 6\0 - Morning" })
+        {
+            using var response = await api.SendAsync(HttpMethod.Post, "/classes", cancellationToken, new { name, totalSeats = 10 });
+            await ApiAssertions.ProblemAsync(response, HttpStatusCode.BadRequest, cancellationToken, "invalid_class");
+        }
+    }
+
+    [IntegrationFact]
     public async Task MissingAndMalformedClassIdsReturnTheirDocumentedErrors()
     {
         var cancellationToken = TestContext.Current.CancellationToken;

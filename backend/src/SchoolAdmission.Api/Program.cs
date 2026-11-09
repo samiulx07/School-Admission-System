@@ -40,6 +40,13 @@ if (migrate)
     return 0;
 }
 
+// The assignment's literal environment variable takes precedence over the nested .NET setting.
+var holdDurationAlias = Environment.GetEnvironmentVariable("HOLD_DURATION_SECONDS");
+if (holdDurationAlias is not null)
+{
+    builder.Configuration[$"{AdmissionOptions.SectionName}:HoldDurationSeconds"] = holdDurationAlias;
+}
+
 var frontendOrigin = builder.Configuration["Cors:FrontendOrigin"] ?? "http://localhost:3000";
 if (!Uri.TryCreate(frontendOrigin, UriKind.Absolute, out var frontendUri)
     || (frontendUri.Scheme != Uri.UriSchemeHttp && frontendUri.Scheme != Uri.UriSchemeHttps)

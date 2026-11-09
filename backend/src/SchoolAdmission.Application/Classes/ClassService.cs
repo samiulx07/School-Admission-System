@@ -8,10 +8,10 @@ public sealed class ClassService(IClassRepository classes, IAdmissionClock clock
     public async Task<UseCaseResult<CreatedClass>> CreateAsync(string? name, int totalSeats,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(name) || name.Trim().Length > 200 || totalSeats <= 0)
+        if (!AdmissionClass.IsValidName(name) || totalSeats <= 0)
         {
             return UseCaseResult<CreatedClass>.Failure(new ApplicationError(ErrorKind.Validation,
-                "invalid_class", "Provide a class name of 1–200 characters and a positive totalSeats value."));
+                "invalid_class", "Provide a class name of 1–200 characters without NUL and a positive totalSeats value."));
         }
 
         var now = await clock.GetUtcNowAsync(cancellationToken);

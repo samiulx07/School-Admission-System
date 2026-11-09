@@ -27,6 +27,7 @@ public sealed class HoldEndpointTests
         Assert.Equal("HELD", hold.GetProperty("status").GetString());
         var expiresAt = hold.GetProperty("expiresAt").GetDateTimeOffset();
         Assert.Equal(TimeSpan.Zero, expiresAt.Offset);
+        Assert.Equal(TimeSpan.FromSeconds(60), expiresAt - hold.GetProperty("createdAt").GetDateTimeOffset());
 
         using var statusResponse = await api.SendAsync(HttpMethod.Get, $"/holds/{holdId}", cancellationToken);
         Assert.Equal(HttpStatusCode.OK, statusResponse.StatusCode);

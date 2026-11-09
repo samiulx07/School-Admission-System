@@ -8,6 +8,8 @@ public sealed class AdmissionClassTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
+    [InlineData("\0")]
+    [InlineData("Class 6\0 - Morning")]
     public void CreateRejectsMissingNames(string? name)
     {
         Assert.ThrowsAny<ArgumentException>(() => AdmissionClass.Create(name!, 10, DateTimeOffset.UtcNow));
