@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Text;
 
 namespace SchoolAdmission.IntegrationTests.Support;
 
@@ -9,14 +10,14 @@ internal sealed class ApiTestClient : IDisposable
     internal ApiTestClient(bool secondary = false)
     {
         _ = IntegrationEnvironment.DatabaseConnectionString();
-        client = new HttpClient
+        client = new HttpClient(new SocketsHttpHandler { RequestHeaderEncodingSelector = (_, _) => Encoding.UTF8 })
         {
             BaseAddress = IntegrationEnvironment.ApiUrl(secondary),
             Timeout = TimeSpan.FromSeconds(60)
         };
     }
 
-    internal async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, CancellationToken cancellationToken, object? body = null, string? studentId = null)
+    internal async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, CancellationToken cancellationToken, object? body = null, string? studentId = null, IReadOnlyList<string>? studentIds = null)
     {
         using var request = new HttpRequestMessage(method, path);
         if (body is not null)
@@ -27,6 +28,11 @@ internal sealed class ApiTestClient : IDisposable
         if (studentId is not null)
         {
             request.Headers.Add("X-Student-Id", studentId);
+        }
+
+        if (studentIds is not null)
+        {
+            request.Headers.Add("X-Student-Id", studentIds);
         }
 
         return await client.SendAsync(request, cancellationToken);

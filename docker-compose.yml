@@ -7,7 +7,7 @@ x-api: &api
     dockerfile: backend/Dockerfile
     target: runtime
   environment: &api-environment
-    ConnectionStrings__Admissions: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only
+    ConnectionStrings__Admissions: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only;Maximum Pool Size=20;GSS Encryption Mode=Disable
     Admission__HoldDurationSeconds: ${HOLD_DURATION_SECONDS:-600}
     Cors__FrontendOrigin: ${FRONTEND_ORIGIN:-http://localhost:3000}
   depends_on:
@@ -39,7 +39,7 @@ services:
     healthcheck:
       disable: true
     environment:
-      ConnectionStrings__Migrations: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only
+      ConnectionStrings__Migrations: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only;GSS Encryption Mode=Disable
     depends_on:
       db:
         condition: service_healthy
@@ -74,7 +74,7 @@ services:
     healthcheck:
       disable: true
     environment:
-      ConnectionStrings__Migrations: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+      ConnectionStrings__Migrations: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;GSS Encryption Mode=Disable
     depends_on:
       test-db:
         condition: service_healthy
@@ -86,7 +86,7 @@ services:
       dockerfile: backend/Dockerfile
       target: runtime
     environment: &test-api-environment
-      ConnectionStrings__Admissions: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+      ConnectionStrings__Admissions: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;Maximum Pool Size=20;GSS Encryption Mode=Disable
       Admission__HoldDurationSeconds: 60
       Cors__FrontendOrigin: http://localhost:3000
     depends_on:
@@ -113,7 +113,7 @@ services:
     environment:
       TEST_API_URL: http://test-api:8080
       TEST_SECONDARY_API_URL: http://test-api-secondary:8080
-      TEST_DB_CONNECTION_STRING: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only
+      TEST_DB_CONNECTION_STRING: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;GSS Encryption Mode=Disable
     depends_on:
       test-api:
         condition: service_healthy

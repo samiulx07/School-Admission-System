@@ -32,7 +32,7 @@ Run the isolated backend tests with Docker:
 docker compose --profile test run --build --rm backend-tests
 ```
 
-Tests use their own temporary PostgreSQL database and API processes, without resetting development data. The test suite is expanded with each feature. The current foundation includes 27 domain cases and two real PostgreSQL schema checks.
+Tests use their own temporary PostgreSQL database and API processes, without resetting development data. Coverage includes domain lifecycle rules, schema constraints, HTTP contracts, and capacity/duplicate safety across two API processes. The capacity test sends 100 simultaneous requests for 10 seats and requires exactly 10 successful holds.
 
 The backend GitHub Actions workflow runs the same Docker test command on relevant pushes and pull requests. It needs no cloud credentials. Hosted CI execution can be verified after the repository is pushed.
 
@@ -76,10 +76,19 @@ To author a new migration, restore the pinned EF tool with `dotnet tool restore`
 | `POST /classes` with `{ "name": "Class 6 - Morning", "totalSeats": 10 }` | `201` with `{id,name,totalSeats}` and a detail Location |
 | `GET /classes` | `200` with an array of class seat summaries |
 | `GET /classes/{classId}` | `200` with one seat summary |
+| `POST /classes/{classId}/holds` with `X-Student-Id` | `201` with `{holdId,classId,studentId,status,expiresAt,createdAt,serverNow}` |
+| `GET /holds/{holdId}` | `200` with the hold's current status and timestamps |
+| `GET /me/holds` with `X-Student-Id` | `200` with the current student's application history and class names |
 
 Summaries include `id`, `name`, `totalSeats`, `heldSeats`, `confirmedSeats`, and `availableSeats`. These endpoints require no identity header. Counts come from PostgreSQL in one projected query; expired pending holds do not occupy seats.
 
-Invalid input returns `400`; missing resources return `404`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Further endpoints and concurrency behavior are documented with their feature commits.
+Student identifiers must be exactly 17 ASCII digits in a single `X-Student-Id` header. They remain strings, preserving leading zeros. Hold-status reads remain public and omit the student's identifier. History includes previous applications as well as current ones.
+
+Reservations use short `READ COMMITTED` PostgreSQL transactions. Every allocation writer first locks the class row, then obtains fresh database time, retires elapsed holds, and checks uniqueness and capacity. The partial unique index protects active applications; counts are derived from stored holds. This works across API processes. Local API pools are limited to 20 connections per process, keeping the concurrent HTTP tests below PostgreSQL's connection limit.
+
+`HOLD_DURATION_SECONDS` defaults to `600`. A hold's `serverNow` lets the frontend account for clock differences. Expired pending holds immediately read as `EXPIRED`; reservation transactions persist expiry before reapplication. The autonomous expiry worker is added in its own feature.
+
+Invalid input returns `400`; missing resources return `404`; exhausted capacity or an existing active application returns `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Confirmation and cancellation are added with their own feature commits.
 
 ## Selected stack
 

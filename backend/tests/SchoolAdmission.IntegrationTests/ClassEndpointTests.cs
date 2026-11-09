@@ -62,7 +62,7 @@ public sealed class ClassEndpointTests
         foreach (var request in invalidRequests)
         {
             using var response = await api.SendAsync(HttpMethod.Post, "/classes", cancellationToken, request);
-            await AssertProblemAsync(response, HttpStatusCode.BadRequest, cancellationToken);
+            await ApiAssertions.ProblemAsync(response, HttpStatusCode.BadRequest, cancellationToken);
         }
     }
 
@@ -73,10 +73,10 @@ public sealed class ClassEndpointTests
         using var api = new ApiTestClient();
 
         using var missingResponse = await api.SendAsync(HttpMethod.Get, $"/classes/{Guid.NewGuid()}", cancellationToken);
-        await AssertProblemAsync(missingResponse, HttpStatusCode.NotFound, cancellationToken);
+        await ApiAssertions.ProblemAsync(missingResponse, HttpStatusCode.NotFound, cancellationToken);
 
         using var malformedResponse = await api.SendAsync(HttpMethod.Get, "/classes/not-a-uuid", cancellationToken);
-        await AssertProblemAsync(malformedResponse, HttpStatusCode.BadRequest, cancellationToken);
+        await ApiAssertions.ProblemAsync(malformedResponse, HttpStatusCode.BadRequest, cancellationToken);
     }
 
     private static void AssertInitialSeatSummary(JsonElement value, Guid id, string name, int totalSeats)
@@ -89,14 +89,4 @@ public sealed class ClassEndpointTests
         Assert.Equal(totalSeats, value.GetProperty("availableSeats").GetInt32());
     }
 
-    private static async Task AssertProblemAsync(HttpResponseMessage response, HttpStatusCode status, CancellationToken cancellationToken)
-    {
-        Assert.Equal(status, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-        var problem = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
-        Assert.Equal((int)status, problem.GetProperty("status").GetInt32());
-        Assert.False(string.IsNullOrWhiteSpace(problem.GetProperty("title").GetString()));
-        Assert.False(string.IsNullOrWhiteSpace(problem.GetProperty("code").GetString()));
-        Assert.False(string.IsNullOrWhiteSpace(problem.GetProperty("traceId").GetString()));
-    }
 }
