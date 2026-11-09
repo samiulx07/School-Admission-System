@@ -4,7 +4,7 @@ A concurrency-safe admission API and React portal for reserving and confirming l
 
 ## Development status
 
-Implementation proceeds in small verified commits: backend first, then the frontend after the backend completion review. The API, Docker configuration, and frontend instructions are added alongside their working features.
+The backend implementation and local completion review are finished. All eight endpoints, concurrency rules, autonomous expiry and persistence checks pass. Frontend implementation follows in small feature commits; the complete assignment review remains pending that phase. Supabase connectivity awaits the user's separately supplied credentials.
 
 The backend solution now contains Domain, Application, Infrastructure, and API projects, plus separate unit and PostgreSQL integration test projects. Package versions are centrally pinned and restore lockfiles are committed.
 
@@ -20,6 +20,8 @@ dotnet format backend/SchoolAdmission.slnx --no-restore --verify-no-changes
 
 ## Run the backend with Docker
 
+Use current Docker Engine or Docker Desktop with Compose v2. On Windows with a WSL-only engine, keep the WSL distribution running while using the application.
+
 ```sh
 docker compose up --build -d backend
 ```
@@ -30,6 +32,12 @@ Run the isolated backend tests with Docker:
 
 ```sh
 docker compose --profile test run --build --rm backend-tests
+```
+
+Stop and remove only the disposable test services afterward:
+
+```sh
+docker compose --profile test rm --stop --force backend-tests test-api test-api-secondary test-expiry-api test-migrate test-db
 ```
 
 Tests use their own temporary PostgreSQL database and API processes, without resetting development data. Coverage includes domain lifecycle rules, schema constraints, HTTP contracts, and capacity/duplicate safety across two API processes. The capacity test sends 100 simultaneous requests for 10 seats and requires exactly 10 successful holds.
@@ -48,7 +56,7 @@ FRONTEND_ORIGIN=http://localhost:3000
 API_BASE_URL=http://localhost:8080
 ```
 
-Copy the exact session-pooler hostname and username from your project's Connect panel. Use verified TLS; install/mount the project's trusted CA and add `Root Certificate=<container path>` if your connection requires a custom root. Supabase API keys are unnecessary because only the backend connects to PostgreSQL.
+Copy the exact session-pooler hostname and username from your project's Connect panel. Use verified TLS; store optional certificates under ignored `.local/certs`, mount the trusted CA, and add `Root Certificate=<container path>` if your connection requires a custom root. Supabase API keys are unnecessary because only the backend connects to PostgreSQL.
 
 Opt into your Supabase database explicitly:
 
@@ -97,6 +105,12 @@ Only the owner can confirm an unexpired pending hold. Repeating that owner's suc
 Only the owner can cancel an unexpired pending hold. Cancellation releases its seat; repeating the owner's cancellation returns an empty `204`. Confirmed admissions are final and expired holds cannot be cancelled. After cancellation, the student may create a new hold. Concurrent confirmation and cancellation serialize on the same class lock, so exactly one transition wins.
 
 Invalid input returns `400`; changing another student's hold returns `403`; missing resources return `404`; exhausted capacity, duplicate active applications, or forbidden lifecycle transitions return `409`. Errors use Problem Details with a readable title, stable `code`, and `traceId`.
+
+## Backend completion checks
+
+The completion review passed 29 unit and 29 PostgreSQL/HTTP integration tests in Docker, with no skips. This includes 100-request capacity, duplicate-student, confirmation and cancellation workloads across two API processes, expiry boundaries after observed lock waits, and automatic persisted expiry without admission requests.
+
+Additional local checks passed API restart, startup expiry recovery observed through PostgreSQL, and ordinary Compose down/up persistence. The default duration was verified as 600 seconds; invalid duration fails startup. Release builds and formatting passed on the pinned SDK. A NuGet vulnerability audit found no vulnerable direct or transitive backend packages at this review.
 
 ## Selected stack
 
