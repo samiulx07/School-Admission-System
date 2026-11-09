@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SchoolAdmission.Api.Configuration;
+using SchoolAdmission.Api.Errors;
+using SchoolAdmission.Application.Classes;
 using SchoolAdmission.Infrastructure;
 using SchoolAdmission.Infrastructure.Persistence;
 
@@ -43,8 +45,10 @@ if (!Uri.TryCreate(frontendOrigin, UriKind.Absolute, out var frontendUri)
     throw new InvalidOperationException("Cors:FrontendOrigin must be an HTTP(S) origin without a path or trailing slash.");
 }
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(ApiBehaviorConfiguration.Configure);
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
+builder.Services.AddScoped<ClassService>();
 builder.Services.AddOptions<AdmissionOptions>()
     .BindConfiguration(AdmissionOptions.SectionName)
     .ValidateDataAnnotations()

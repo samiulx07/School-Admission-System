@@ -67,6 +67,18 @@ dotnet run --project backend/src/SchoolAdmission.Api
 
 To author a new migration, restore the pinned EF tool with `dotnet tool restore`, set `ConnectionStrings__Migrations` explicitly, then use `dotnet ef migrations add <Name> --project backend/src/SchoolAdmission.Infrastructure --output-dir Persistence/Migrations`. Never use `EnsureCreated` with the migration-managed database.
 
+## Implemented API
+
+| Request | Result |
+| --- | --- |
+| `POST /classes` with `{ "name": "Class 6 - Morning", "totalSeats": 10 }` | `201` with `{id,name,totalSeats}` and a detail Location |
+| `GET /classes` | `200` with an array of class seat summaries |
+| `GET /classes/{classId}` | `200` with one seat summary |
+
+Summaries include `id`, `name`, `totalSeats`, `heldSeats`, `confirmedSeats`, and `availableSeats`. These endpoints require no identity header. Counts come from PostgreSQL in one projected query; expired pending holds do not occupy seats.
+
+Invalid input returns `400`; missing resources return `404`. Errors use Problem Details with a readable title, stable `code`, and `traceId`. Further endpoints and concurrency behavior are documented with their feature commits.
+
 ## Selected stack
 
 - ASP.NET Core, Entity Framework Core, Npgsql, and PostgreSQL.
