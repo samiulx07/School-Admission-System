@@ -34,7 +34,7 @@ jobs:
         run: docker compose --profile test run --build --rm backend-tests
       - name: Show service logs on failure
         if: failure()
-        run: docker compose --profile test logs --no-color test-migrate test-api test-api-secondary test-db
+        run: docker compose --profile test logs --no-color test-migrate test-api test-api-secondary test-expiry-api test-db
       - name: Clean up disposable CI resources
         if: always()
         run: docker compose --profile test down --volumes --remove-orphans

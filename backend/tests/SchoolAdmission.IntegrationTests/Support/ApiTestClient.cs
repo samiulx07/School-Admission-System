@@ -7,12 +7,12 @@ internal sealed class ApiTestClient : IDisposable
 {
     private readonly HttpClient client;
 
-    internal ApiTestClient(bool secondary = false)
+    internal ApiTestClient(ApiTarget target = ApiTarget.Primary)
     {
         _ = IntegrationEnvironment.DatabaseConnectionString();
         client = new HttpClient(new SocketsHttpHandler { RequestHeaderEncodingSelector = (_, _) => Encoding.UTF8 })
         {
-            BaseAddress = IntegrationEnvironment.ApiUrl(secondary),
+            BaseAddress = IntegrationEnvironment.ApiUrl(target),
             Timeout = TimeSpan.FromSeconds(60)
         };
     }

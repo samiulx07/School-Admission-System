@@ -8,6 +8,8 @@ internal static class IntegrationEnvironment
 
     internal static bool HasApi => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEST_API_URL"));
 
+    internal static bool HasExpiryApi => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("TEST_EXPIRY_API_URL"));
+
     internal static string DatabaseConnectionString()
     {
         var value = Environment.GetEnvironmentVariable("TEST_DB_CONNECTION_STRING");
@@ -25,19 +27,25 @@ internal static class IntegrationEnvironment
         return settings.ConnectionString;
     }
 
-    internal static Uri ApiUrl(bool secondary = false)
+    internal static Uri ApiUrl(ApiTarget target)
     {
-        var variable = secondary ? "TEST_SECONDARY_API_URL" : "TEST_API_URL";
+        var variable = target switch
+        {
+            ApiTarget.Primary => "TEST_API_URL",
+            ApiTarget.Secondary => "TEST_SECONDARY_API_URL",
+            ApiTarget.Expiry => "TEST_EXPIRY_API_URL",
+            _ => throw new ArgumentOutOfRangeException(nameof(target))
+        };
         var value = Environment.GetEnvironmentVariable(variable);
         if (!Uri.TryCreate(value, UriKind.Absolute, out var uri)
             || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
-            || (!uri.IsLoopback && uri.Host is not ("test-api" or "test-api-secondary"))
+            || (!uri.IsLoopback && uri.Host is not ("test-api" or "test-api-secondary" or "test-expiry-api"))
             || uri.AbsolutePath != "/"
             || !string.IsNullOrEmpty(uri.Query)
             || !string.IsNullOrEmpty(uri.Fragment)
             || !string.IsNullOrEmpty(uri.UserInfo))
         {
-            throw new InvalidOperationException($"{variable} must be the root URL of an isolated loopback, test-api, or test-api-secondary server.");
+            throw new InvalidOperationException($"{variable} must be the root URL of an isolated loopback or test API server.");
         }
 
         return uri;

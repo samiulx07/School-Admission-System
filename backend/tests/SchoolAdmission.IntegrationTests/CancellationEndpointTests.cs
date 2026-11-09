@@ -39,7 +39,7 @@ public sealed class CancellationEndpointTests
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         using var primary = new ApiTestClient();
-        using var secondary = new ApiTestClient(secondary: true);
+        using var secondary = new ApiTestClient(ApiTarget.Secondary);
         var classId = await ApiTestData.CreateClassAsync(primary, 1, cancellationToken);
         var studentId = ApiTestData.NewStudentId();
         var holdId = await ApiTestData.CreateHoldAsync(primary, classId, studentId, cancellationToken);
@@ -146,7 +146,7 @@ public sealed class CancellationEndpointTests
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         using var primary = new ApiTestClient();
-        using var secondary = new ApiTestClient(secondary: true);
+        using var secondary = new ApiTestClient(ApiTarget.Secondary);
         for (var iteration = 0; iteration < 10; iteration++)
         {
             var classId = await ApiTestData.CreateClassAsync(primary, 1, cancellationToken);

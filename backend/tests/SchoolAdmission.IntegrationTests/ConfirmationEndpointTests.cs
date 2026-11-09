@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -14,7 +13,7 @@ public sealed class ConfirmationEndpointTests
     {
         var cancellationToken = TestContext.Current.CancellationToken;
         using var primary = new ApiTestClient();
-        using var secondary = new ApiTestClient(secondary: true);
+        using var secondary = new ApiTestClient(ApiTarget.Secondary);
         var classId = await ApiTestData.CreateClassAsync(primary, 1, cancellationToken);
         var studentId = ApiTestData.NewStudentId();
         var holdId = await ApiTestData.CreateHoldAsync(primary, classId, studentId, cancellationToken);
@@ -123,7 +122,7 @@ public sealed class ConfirmationEndpointTests
         }
 
         var confirmation = api.SendAsync(HttpMethod.Post, $"/holds/{holdId}/confirm", cancellationToken, studentId: studentId);
-        await WaitForBlockedTransactionAsync(blocker.ProcessID, cancellationToken);
+        await TestDatabase.WaitForBlockedTransactionsAsync(blocker.ProcessID, 1, cancellationToken);
         Assert.False(confirmation.IsCompleted);
 
         // The API transaction is already waiting; its start time now precedes this new deadline.
@@ -139,26 +138,6 @@ public sealed class ConfirmationEndpointTests
         await ApiAssertions.ProblemAsync(response, HttpStatusCode.Conflict, cancellationToken, "hold_not_confirmable");
         await ApiAssertions.ClassCountsAsync(api, classId, 0, 0, 1, cancellationToken);
         await TestDatabase.AssertHoldCountsAsync(classId, 0, 0, cancellationToken);
-    }
-
-    private static async Task WaitForBlockedTransactionAsync(int blockingProcessId, CancellationToken cancellationToken)
-    {
-        await using var observer = new NpgsqlConnection(IntegrationEnvironment.DatabaseConnectionString());
-        await observer.OpenAsync(cancellationToken);
-        await using var command = new NpgsqlCommand("SELECT EXISTS (SELECT 1 FROM pg_stat_activity WHERE @blocker = ANY(pg_blocking_pids(pid)))", observer);
-        command.Parameters.AddWithValue("blocker", blockingProcessId);
-        var timer = Stopwatch.StartNew();
-        while (timer.Elapsed < TimeSpan.FromSeconds(5))
-        {
-            if (await command.ExecuteScalarAsync(cancellationToken) is true)
-            {
-                return;
-            }
-
-            await Task.Delay(TimeSpan.FromMilliseconds(25), cancellationToken);
-        }
-
-        Assert.Fail("The confirmation transaction did not reach the held database row lock within five seconds.");
     }
 
     private static async Task AssertConfirmedAsync(ApiTestClient api, Guid holdId, string studentId, CancellationToken cancellationToken)

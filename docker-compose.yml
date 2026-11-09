@@ -104,6 +104,19 @@ services:
       test-migrate:
         condition: service_completed_successfully
 
+  test-expiry-api:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: runtime
+    environment:
+      <<: *test-api-environment
+      Admission__HoldDurationSeconds: 3
+    depends_on:
+      test-migrate:
+        condition: service_completed_successfully
+
   backend-tests:
     profiles: [test]
     build:
@@ -113,11 +126,14 @@ services:
     environment:
       TEST_API_URL: http://test-api:8080
       TEST_SECONDARY_API_URL: http://test-api-secondary:8080
+      TEST_EXPIRY_API_URL: http://test-expiry-api:8080
       TEST_DB_CONNECTION_STRING: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;GSS Encryption Mode=Disable
     depends_on:
       test-api:
         condition: service_healthy
       test-api-secondary:
+        condition: service_healthy
+      test-expiry-api:
         condition: service_healthy
 
 volumes:

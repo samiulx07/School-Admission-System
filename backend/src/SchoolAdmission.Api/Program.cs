@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SchoolAdmission.Api.Configuration;
 using SchoolAdmission.Api.Errors;
+using SchoolAdmission.Api.Workers;
 using SchoolAdmission.Application.Classes;
 using SchoolAdmission.Application.Holds;
 using SchoolAdmission.Infrastructure;
@@ -52,6 +53,8 @@ builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
 builder.Services.AddScoped<ClassService>();
 builder.Services.AddScoped<HoldService>();
+builder.Services.AddScoped<HoldExpiryService>();
+builder.Services.AddHostedService<HoldExpiryWorker>();
 builder.Services.AddSingleton(provider => new HoldPolicy(TimeSpan.FromSeconds(
     provider.GetRequiredService<IOptions<AdmissionOptions>>().Value.HoldDurationSeconds)));
 builder.Services.AddOptions<AdmissionOptions>()

@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddScoped<IAdmissionClock, DatabaseClock>();
         services.AddScoped<IClassAdmissionTransactions, ClassAdmissionTransactions>();
         services.AddScoped<IHoldQueries, HoldQueries>();
+        services.AddScoped<IHoldExpiryStore, HoldExpiryStore>();
         return services;
     }
 }

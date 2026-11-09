@@ -88,7 +88,9 @@ Student identifiers must be exactly 17 ASCII digits in a single `X-Student-Id` h
 
 Reservations use short `READ COMMITTED` PostgreSQL transactions. Every allocation writer first locks the class row, then obtains fresh database time, retires elapsed holds, and checks uniqueness and capacity. The partial unique index protects active applications; counts are derived from stored holds. This works across API processes. Local API pools are limited to 20 connections per process, keeping the concurrent HTTP tests below PostgreSQL's connection limit.
 
-`HOLD_DURATION_SECONDS` defaults to `600`. A hold's `serverNow` lets the frontend account for clock differences. Expired pending holds immediately read as `EXPIRED`; reservation transactions persist expiry before reapplication. The autonomous expiry worker is added in its own feature.
+`HOLD_DURATION_SECONDS` defaults to `600`. A hold's `serverNow` lets the frontend account for clock differences. Expired pending holds immediately read as `EXPIRED`; reservation transactions persist expiry before reapplication.
+
+The autonomous worker also persists overdue holds as `EXPIRED` without admission requests. It runs at startup and every second, creating a fresh database scope per pass. Each transaction locks at most 100 due classes with `FOR UPDATE SKIP LOCKED`, reads fresh database time after locking, and updates only overdue `HELD` rows. Busy classes are retried on a later tick; multiple API instances can run the worker safely. Confirmed and cancelled applications remain unchanged.
 
 Only the owner can confirm an unexpired pending hold. Repeating that owner's successful confirmation returns `200` without allocating another seat, including after the original deadline. Ownership is checked before idempotent success. The confirmation decision uses fresh database time after any class-lock wait.
 
