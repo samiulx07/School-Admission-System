@@ -2,7 +2,7 @@
 
 ## Tools and scope
 
-OpenAI Codex assists with requirements review, implementation planning, code, tests, and review. The installed Awwwards skill is reserved for the frontend design and visual verification phase. Context7 was queried through its remote MCP endpoint for the official EF Core migration/transaction documentation and Npgsql provider documentation for version 10.0.3.
+OpenAI Codex assists with requirements review, implementation planning, code, tests, and review. The installed Awwwards skill guides the frontend concept, typography, layout and production visual verification. Its three-concept exercise and selected classroom-capacity direction are recorded in `DESIGN.md`. Context7 was queried through its remote MCP endpoint for official EF Core/Npgsql documentation and for React Context, TanStack Query cancellation and Axios AbortSignal guidance.
 
 ## Checks and corrections
 

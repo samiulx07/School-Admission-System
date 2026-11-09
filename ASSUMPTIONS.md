@@ -9,6 +9,7 @@
 - The instant at or after `expiresAt` is expired. Confirmation is idempotent for its owner even after its original expiry timestamp.
 - Supabase hosts development PostgreSQL only. Default evaluation startup and automated tests use ordinary local PostgreSQL and require no Supabase account.
 - The interface is English. Application date and available-seat filters are optional UI conveniences.
+- Seatwise is a fictional product identity for the assignment, with no institutional affiliation, invented admission statistics or real payment gateway.
 - Imported React Icons components may generate SVG at runtime; handwritten SVG markup and custom SVG assets are excluded.
 
 Implementation-specific decisions and verified behavior will be updated with their feature commits.
