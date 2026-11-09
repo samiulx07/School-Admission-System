@@ -1,0 +1,40 @@
+name: Backend verification
+
+on:
+  push:
+    paths:
+      - "backend/**"
+      - "global.json"
+      - ".editorconfig"
+      - ".dockerignore"
+      - "docker-compose*.yml"
+      - ".github/workflows/backend.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "global.json"
+      - ".editorconfig"
+      - ".dockerignore"
+      - "docker-compose*.yml"
+      - ".github/workflows/backend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build and test against isolated PostgreSQL
+        run: docker compose --profile test run --build --rm backend-tests
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose --profile test logs --no-color test-migrate test-api test-api-secondary test-db
+      - name: Clean up disposable CI resources
+        if: always()
+        run: docker compose --profile test down --volumes --remove-orphans

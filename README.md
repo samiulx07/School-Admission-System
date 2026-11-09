@@ -34,6 +34,8 @@ docker compose --profile test run --build --rm backend-tests
 
 Tests use their own temporary PostgreSQL database and API processes, without resetting development data. The test suite is expanded with each feature. The current foundation includes 27 domain cases and two real PostgreSQL schema checks.
 
+The backend GitHub Actions workflow runs the same Docker test command on relevant pushes and pull requests. It needs no cloud credentials. Hosted CI execution can be verified after the repository is pushed.
+
 ## Supabase development configuration
 
 Create your ignored root `.env` file locally. Environment files, including `.env.example`, are intentionally not included in Git. Set:
