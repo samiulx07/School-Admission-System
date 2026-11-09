@@ -1,0 +1,27 @@
+# Private local planning and configuration (including .env.example).
+/plan.md
+.env
+.env.*
+/.local/
+/.dotnet/
+
+# Installed dependencies and generated outputs.
+**/node_modules/
+**/bin/
+**/obj/
+**/.next/
+**/dist/
+**/out/
+**/coverage/
+**/TestResults/
+**/test-results/
+**/playwright-report/
+**/.shots/
+.vs/
+*.user
+*.suo
+*.trx
+*.log
+
+# The confidential assignment is not part of the public deliverable.
+Asst_Software_Engineer_Project_Assignment.pdf
