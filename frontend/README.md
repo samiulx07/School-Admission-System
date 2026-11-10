@@ -67,7 +67,7 @@ npx playwright test --config=playwright.live.config.ts
 
 For Bash, set the same variable with `export PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001`. On Linux, `npx playwright install --with-deps chromium` also installs browser system dependencies.
 
-The regular suite uses controlled API fixtures and direct query-cache checks. The separate live suite creates classes, sets leading-zero IDs, reserves, confirms, cancels, reapplies and waits for real expiry through the UI without network mocking. It checks persistence, history, seat counts and disabled expired payment controls.
+The regular suite uses controlled API fixtures and direct query-cache checks. The separate live suite covers four real UI flows without network mocking: confirmation, cancellation and reapplication, natural expiry, and recovery after an actual browser shutdown and restart. It creates classes, sets leading-zero IDs and reserves places through the UI, then checks persistence, history, seat counts and disabled expired payment controls. The restart check reopens the same isolated Chromium profile under Playwright's ignored test-results directory and verifies that the student and active hold are restored without injecting browser storage.
 
 Remove only this disposable project from the repository root:
 

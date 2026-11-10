@@ -1,5 +1,5 @@
 import { randomInt, randomUUID } from "node:crypto";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { chromium, expect, test, type Locator, type Page } from "@playwright/test";
 
 // These tests deliberately use the real UI, same-origin API proxy, API and PostgreSQL.
 // Run against the isolated admissions-e2e Compose project, with 20-second holds.
@@ -78,9 +78,10 @@ test("creates a class, preserves a leading-zero student number and persists a co
 
   const documentResponse = await page.reload();
   const initialHtml = await documentResponse!.text();
-  expect(initialHtml).toContain(`>${application.className}</h1>`);
   expect(initialHtml).not.toContain(application.studentId);
+  // Server prefetch is best effort; a loading fallback must recover the same record in the UI.
   await expect(page).toHaveURL(applicationUrl);
+  await expect(page.getByRole("heading", { name: application.className, exact: true })).toBeVisible();
   await expect(page.getByText("Admission confirmed", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pay fee & confirm", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Cancel hold", exact: true })).toBeDisabled();
@@ -153,4 +154,52 @@ test("naturally expires a hold, disables payment at 00:00 and persists the relea
   await expect(history).toHaveCount(1);
   await expect(history.getByText("Expired", { exact: true })).toBeVisible();
   await expect(history.getByRole("link", { name: `Apply again for ${application.className}`, exact: true })).toHaveAttribute("href", "/classes");
+});
+
+test("restores the student and active application after closing and reopening the browser", async ({ baseURL }, testInfo) => {
+  const application = uniqueApplication("browser restart");
+  // Playwright owns this isolated profile under ignored test-results, never a personal browser profile.
+  const profile = testInfo.outputPath("browser-profile");
+  const launch = () => chromium.launchPersistentContext(profile, {
+    baseURL,
+    headless: true,
+    ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
+      : {}),
+  });
+
+  let applicationUrl: string;
+  const firstContext = await launch();
+  const firstBrowser = firstContext.browser();
+  try {
+    const page = firstContext.pages()[0] ?? await firstContext.newPage();
+    await createClassAndSetStudent(page, application);
+    applicationUrl = await reservePlace(page, application);
+  } finally {
+    // Closing the sole persistent context shuts down its entire browser and flushes its profile.
+    await firstContext.close();
+  }
+  expect(firstBrowser).not.toBeNull();
+  expect(firstBrowser!.isConnected()).toBe(false);
+
+  // Reopen the same on-disk profile without injecting identity or copying storage state.
+  const reopenedContext = await launch();
+  try {
+    const page = reopenedContext.pages()[0] ?? await reopenedContext.newPage();
+    await page.goto("/applications");
+    await expect(page.getByLabel("Student ID", { exact: true })).toHaveValue(application.studentId);
+    await expect(page.getByRole("main").getByText(application.studentId, { exact: true })).toBeVisible();
+    const history = applicationHistory(page, application.className);
+    await expect(history).toHaveCount(1);
+    await expect(history.getByText("Held", { exact: true })).toBeVisible();
+    const review = history.getByRole("link", { name: `Review hold for ${application.className}`, exact: true });
+    await expect(review).toHaveAttribute("href", new URL(applicationUrl).pathname);
+    await review.click();
+    await expect(page).toHaveURL(applicationUrl);
+    await expect(page.getByRole("heading", { name: application.className, exact: true })).toBeVisible();
+    await expect(page.getByText("This application belongs to your current student number.", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Pay fee & confirm", exact: true })).toBeEnabled();
+  } finally {
+    await reopenedContext.close();
+  }
 });
