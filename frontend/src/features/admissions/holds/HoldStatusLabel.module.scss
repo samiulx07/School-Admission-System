@@ -1,0 +1,4 @@
+.status { display: inline-flex; width: fit-content; align-items: center; border-radius: 999px; padding: 7px 13px; font-size: 13px; font-weight: 700; }
+.held { color: var(--color-ink); background: var(--color-held); }
+.confirmed { color: var(--color-ink); background: var(--color-accent); }
+.expired, .cancelled { border: 1px solid var(--color-line); color: var(--color-muted); background: var(--color-surface); }

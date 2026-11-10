@@ -1,4 +1,5 @@
 import type { ClassSummary } from "@/shared/types/classes";
+import { ReserveSeatButton } from "@/features/admissions/holds/ReserveSeatButton";
 import { OccupancyBand } from "./OccupancyBand";
 import styles from "./ClassRow.module.scss";
 
@@ -14,6 +15,7 @@ export function ClassRow({ admissionClass }: { admissionClass: ClassSummary }) {
           <span className={`${styles.availability} ${availableSeats === 0 ? styles.full : ""}`}>
             <span aria-hidden="true" />{availableSeats > 0 ? "Open for applications" : "No places available"}
           </span>
+          <ReserveSeatButton classId={id} availableSeats={availableSeats} />
         </div>
         <div className={styles.capacity}>
           <OccupancyBand totalSeats={totalSeats} heldSeats={heldSeats} confirmedSeats={confirmedSeats} />

@@ -1,0 +1,6 @@
+.action { margin-top: 20px; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; font-size: 13px; }
+.action > .button { margin-top: 0; }
+.button:disabled { transform: none; }
+.error { max-width: 48ch; margin: 12px 0 0; color: var(--color-error); font-size: 13px; }
+@media (max-width: 767px) { .button { width: 100%; } }

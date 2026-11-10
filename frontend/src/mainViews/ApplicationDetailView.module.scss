@@ -1,0 +1,36 @@
+@use "../styles/mixins";
+.page { @include mixins.container; padding-block: 40px 8px; }
+.back { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: 10px; margin-left: -10px; border-radius: var(--radius); font-size: 14px; font-weight: 650; text-decoration: none; transition: background-color 180ms var(--ease-settle), transform 180ms var(--ease-settle); }
+.back:hover { transform: translateX(-3px); background: var(--color-accent); }
+.back:active { transform: translateX(0); }
+.heading {
+  max-width: 800px; margin-block: 40px;
+  h1 { margin: 22px 0 24px; overflow-wrap: anywhere; font-size: clamp(40px, 5vw, 64px); line-height: 1.1; letter-spacing: -0.06em; }
+  p { max-width: 53ch; margin: 0; color: var(--color-muted); font-size: 18px; }
+}
+.workspace { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: 64px; }
+.record {
+  border-top: 1px solid var(--color-line); padding-top: 28px;
+  h2 { margin-bottom: 24px; font-size: 23px; letter-spacing: -0.04em; }
+  dl { margin: 0; }
+  dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr); gap: 24px; padding-block: 17px; border-bottom: 1px solid var(--color-line); }
+  dt { color: var(--color-muted); font-size: 13px; font-weight: 600; }
+  dd { min-width: 0; margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+}
+.identifier { overflow-wrap: anywhere; }
+.identity { margin-top: 28px; border-left: 3px solid var(--color-line); padding-left: 20px; color: var(--color-muted); font-size: 14px; p { margin-bottom: 0; } button { margin-top: 16px; } }
+.decision {
+  border: 1px solid var(--color-line); border-radius: var(--radius); padding: 32px; background: var(--color-surface);
+  h2 { margin: 24px 0 20px; font-size: 32px; line-height: 1.2; letter-spacing: -0.045em; }
+}
+.clockLabel { display: inline-flex; align-items: center; gap: 9px; color: var(--color-muted); font-size: 13px; font-weight: 650; }
+.countdown { margin: 0 0 20px; font-size: clamp(54px, 5vw, 70px); font-weight: 650; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.055em; }
+.decisionNote, .note { color: var(--color-muted); font-size: 14px; }
+.note { margin-top: 20px; }
+.payment { width: 100%; margin-top: 10px; }
+.paymentNote { margin: 12px 0 0; color: var(--color-muted); font-size: 12px; text-align: center; }
+.state, .error { margin-top: 40px; border-block: 1px solid var(--color-line); padding-block: 40px; h1 { font-size: 32px; letter-spacing: -0.045em; } p { color: var(--color-muted); } }
+.error { border-color: var(--color-error); button { display: inline-flex; align-items: center; gap: 10px; } }
+@media (max-width: 991px) { .workspace { gap: 32px; } .decision { padding: 24px; } .record dl > div { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+@media (max-width: 767px) { .page { padding-top: 24px; } .heading { margin-block: 28px 32px; } .heading h1 { font-size: 42px; } .heading p { font-size: 16px; } .workspace { grid-template-columns: minmax(0, 1fr); gap: 32px; } .record { order: 2; } .decision { order: 1; } .decision h2 { font-size: 29px; } }
+@media (prefers-reduced-motion: reduce) { .back:hover, .back:active { transform: none; } }
