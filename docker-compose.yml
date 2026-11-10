@@ -116,7 +116,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
       target: runtime
-    environment: *test-api-environment
+    environment:
+      <<: *test-api-environment
+      HTTP_PORTS: "8080;8081"
     depends_on:
       test-migrate:
         condition: service_completed_successfully
@@ -142,7 +144,7 @@ services:
       target: test-runner
     environment:
       TEST_API_URL: http://test-api:8080
-      TEST_SECONDARY_API_URL: http://test-api-secondary:8080
+      TEST_SECONDARY_API_URL: http://test-api-secondary:8081
       TEST_EXPIRY_API_URL: http://test-expiry-api:8080
       TEST_DB_CONNECTION_STRING: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;GSS Encryption Mode=Disable
     depends_on:
