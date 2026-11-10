@@ -1,0 +1,40 @@
+@use "../../../styles/mixins";
+
+.bar { background: var(--color-surface); border-bottom: 1px solid var(--color-line); }
+.inner {
+  @include mixins.container;
+  display: grid;
+  grid-template-columns: max-content max-content minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 16px;
+  padding-block: 12px;
+}
+.label { margin: 0; font-size: 13px; font-weight: 650; }
+.controls { display: flex; min-width: 0; align-items: center; gap: 8px; }
+.input {
+  width: 230px;
+  min-width: 0;
+  min-height: 44px;
+  border-color: var(--color-line);
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.025em;
+}
+.input:focus { border-color: var(--color-ink); box-shadow: 0 0 0 3px rgb(24 62 59 / 14%); }
+.button.button { flex: 0 0 auto; min-height: 44px; padding: 9px 16px; font-size: 13px; white-space: nowrap; }
+.help { margin: 0; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
+.messages { grid-column: 1 / -1; min-width: 0; }
+.messages:empty { display: none; }
+.notice, .error, .feedback { margin: 0; font-size: 13px; line-height: 1.5; }
+.messages p + p { margin-top: 4px; }
+.notice { color: var(--color-muted); }
+.error { color: var(--color-error); }
+.feedback { color: var(--color-ink); }
+
+@media (max-width: 767px) {
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .controls { width: 100%; }
+  .input { flex: 1 1 auto; width: 0; }
+  .help { margin-top: 2px; }
+}

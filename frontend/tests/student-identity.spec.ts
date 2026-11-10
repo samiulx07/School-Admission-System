@@ -61,13 +61,13 @@ test("continues in this tab when browser storage is blocked", async ({ page }) =
     Object.defineProperty(window, "localStorage", { configurable: true, get: () => { throw new DOMException("Storage blocked", "SecurityError"); } });
   });
   await page.goto("/student");
-  await expect(page.getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("main").getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
   await page.getByLabel("Student registration number", { exact: true }).fill(firstStudent);
   await page.getByRole("button", { name: "Use this number" }).click();
   await expect(page.getByText(firstStudent, { exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByLabel("Student registration number", { exact: true })).toHaveValue("");
-  await expect(page.getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("main").getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
   expect(browserErrors).toEqual([]);
 });
 
@@ -80,7 +80,7 @@ test("keeps the current tab usable when saving or clearing browser storage fails
   await page.getByLabel("Student registration number", { exact: true }).fill(firstStudent);
   await page.getByRole("button", { name: "Use this number" }).click();
   await expect(page.getByText(firstStudent, { exact: true })).toBeVisible();
-  await expect(page.getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("main").getByText("Browser storage is unavailable.", { exact: false })).toBeVisible();
   await page.getByRole("button", { name: "Clear number" }).click();
   await expect(page.getByText(firstStudent, { exact: true })).toHaveCount(0);
   await expect(page.getByLabel("Student registration number", { exact: true })).toHaveValue("");

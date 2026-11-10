@@ -7,6 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { BsList, BsX } from "react-icons/bs";
 import { Brand } from "@/shared/components/Brand";
 import { useStudentIdentity } from "@/shared/hooks/useStudentIdentity";
+import { StudentIdentityBar } from "@/features/admissions/identity/StudentIdentityBar";
 import styles from "./SiteHeader.module.scss";
 
 export function SiteHeader() {
@@ -17,6 +18,7 @@ export function SiteHeader() {
   const closeMenu = () => setExpanded(false);
   return (
     <header className={styles.header}>
+      <StudentIdentityBar />
       <Navbar as="div" expand="lg" expanded={expanded} onToggle={setExpanded} className={styles.inner}>
         <Brand />
         <Navbar.Toggle ref={toggle} aria-controls="primary-navigation" label={expanded ? "Close navigation" : "Open navigation"} className={styles.toggle}>

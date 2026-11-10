@@ -25,6 +25,8 @@ Reusable visual components, layouts, menus and main views have paired `.tsx` and
 
 The `/student` page validates and remembers a 17-digit registration number. Changing or clearing it cancels private requests and clears student-specific caches. Blocked browser storage keeps the current tab usable.
 
+The **Student ID** input at the top of every page accepts the same 17-digit birth registration number. Both controls share Context and stay synchronized. The dedicated page also clears the number for shared devices.
+
 With the Docker app running, install Chromium once and run the identity checks:
 
 ```sh
