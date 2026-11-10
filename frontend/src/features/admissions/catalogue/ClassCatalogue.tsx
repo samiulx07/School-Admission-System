@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import { BsArrowClockwise, BsExclamationCircle, BsJournal } from "react-icons/bs";
-import { ClassRow } from "./ClassRow";
+import { FilteredClassRegister } from "./FilteredClassRegister";
 import { useClasses } from "./useClasses";
 import styles from "./ClassCatalogue.module.scss";
 
@@ -58,9 +58,7 @@ export function ClassCatalogue() {
 
       {data && data.length > 0 && (
         <>
-          <ul className={styles.register} aria-label="Classes and seat availability">
-            {data.map(admissionClass => <ClassRow key={admissionClass.id} admissionClass={admissionClass} />)}
-          </ul>
+          <FilteredClassRegister classes={data} />
           <div className={styles.legend} aria-label="Capacity band key">
             <span><i className={styles.confirmed} aria-hidden="true" />Confirmed</span>
             <span><i className={styles.held} aria-hidden="true" />Held</span>

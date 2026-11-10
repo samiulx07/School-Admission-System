@@ -1,0 +1,28 @@
+.filters { margin-bottom: 28px; padding: 24px; border: 1px solid var(--color-line); border-radius: var(--radius); background: var(--color-surface); }
+.selects, .dates { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.dates { margin-top: 20px; }
+.field {
+  min-width: 0;
+  > label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
+  :global(.history-select__control) { min-height: 48px; padding-left: 14px; border: 1px solid var(--color-line); border-radius: 8px; background: var(--color-surface); font-size: 14px; }
+  :global(.history-select__control--is-focused) { border-color: var(--color-ink); outline: 3px solid rgb(24 62 59 / 12%); }
+  :global(.history-select__value-container) { min-width: 0; gap: 4px; }
+  :global(.history-select__input-container) { color: var(--color-ink); }
+  :global(.history-select__indicator) { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--color-muted); }
+  :global(.history-select__menu) { z-index: 5; overflow: hidden; margin-top: 4px; border: 1px solid var(--color-line); border-radius: 8px; background: var(--color-surface); }
+  :global(.history-select__option) { padding: 12px 14px; color: var(--color-ink); font-size: 14px; }
+  :global(.history-select__option--is-focused) { background: var(--color-ground); }
+  :global(.history-select__option--is-selected) { background: var(--color-accent); font-weight: 700; }
+  :global(.react-datepicker-wrapper), :global(.react-datepicker__input-container) { display: block; width: 100%; }
+  :global(.react-datepicker__input-container) > input { width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid var(--color-line); border-radius: 8px; background: var(--color-surface); color: var(--color-ink); font-size: 16px; }
+  :global(.react-datepicker-popper) { z-index: 6; }
+  :global(.react-datepicker) { border-color: var(--color-line); border-radius: 8px; color: var(--color-ink); font-family: inherit; }
+  :global(.react-datepicker__header) { border-color: var(--color-line); background: var(--color-ground); }
+  :global(.react-datepicker__day--selected), :global(.react-datepicker__day--in-range) { background: var(--color-ink); color: var(--color-surface); }
+  :global(.react-datepicker__day--keyboard-selected), :global(.react-datepicker__day--in-selecting-range) { background: var(--color-accent); color: var(--color-ink); }
+  :global(.react-datepicker__day), :global(.react-datepicker__day-name) { width: 2.1rem; line-height: 2.1rem; }
+}
+.footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; p { margin: 0; color: var(--color-muted); font-size: 12px; } }
+.clear { min-height: 44px; padding: 8px 0; color: var(--color-ink); font-size: 13px; text-decoration: underline; &:hover { color: var(--color-ink); } }
+@media (min-width: 1100px) { .filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; } .dates { margin-top: 0; } .footer { grid-column: 1 / -1; } }
+@media (max-width: 575px) { .filters { padding: 20px; } .selects, .dates { grid-template-columns: minmax(0, 1fr); gap: 16px; } .dates { margin-top: 16px; } }
