@@ -37,4 +37,6 @@ OpenAI Codex assists with requirements review, implementation planning, code, te
 
 - Independent PDF review caught the literal requirement for a birth-registration input at the top of each page. A compact shared Context-backed input now satisfies it while retaining the dedicated management page. Its indexed Docker build, 18 identity/navigation checks, and desktop/phone home/student axe and overflow checks passed. Feedback is scoped to the saved identifier so a change or clear elsewhere cannot leave an old success notice visible. Existing storage assertions were scoped to the main form after the new top control added its own notice.
 
+- Final isolated browser verification passed all 68 fixture/query checks and three real UI-to-API-to-PostgreSQL flows, with no skipped cases. Real tests cover confirmation/reload/history, cancellation/reapplication, and natural 20-second expiry with disabled payment at 00:00 and released seats. The dedicated Compose project isolates its database and ports from development and never selects Supabase. The final npm audit reports zero vulnerabilities. Frontend CI uses the same commands; its remote execution awaits a push.
+
 Feature-specific implementation corrections and actual verification results will be added as they occur. Test results and tool usage will not be claimed before they have run.

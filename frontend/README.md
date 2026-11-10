@@ -45,3 +45,34 @@ After setting a student number, choose **Reserve a place** in the register. `/ap
 For an owned, unexpired hold, **Pay fee & confirm** simulates successful fee payment and confirms admission; no money is collected. **Cancel hold** releases a pending place. Both actions ask for a decision and disable opposing actions while pending. Run `npx playwright test tests/hold-actions.spec.ts` for lifecycle, ownership, error and race checks.
 
 **My applications** opens the current student's history at `/applications`. Filter by status, class and inclusive application dates in this device's timezone. The catalogue also supports debounced name search and an available-seat range. Run `npx playwright test tests/history.spec.ts tests/filters.spec.ts` for history isolation, filtering, polling and keyboard checks.
+
+## Complete browser verification
+
+Frontend browser checks additionally require the pinned Node/npm toolchain and Chromium. From the repository root, start a disposable local stack with Docker Compose 2.24.4 or newer:
+
+```sh
+docker compose -p admissions-e2e -f docker-compose.yml -f docker-compose.e2e.yml up --build --wait frontend
+```
+
+Its frontend is at `http://127.0.0.1:3001`, API at `http://127.0.0.1:8081`, and PostgreSQL volume belongs only to `admissions-e2e`. The override always selects local PostgreSQL and uses 20-second holds.
+
+From `frontend`, install Chromium once and run both suites. In PowerShell:
+
+```powershell
+npx playwright install chromium
+$env:PLAYWRIGHT_BASE_URL = "http://127.0.0.1:3001"
+npx playwright test
+npx playwright test --config=playwright.live.config.ts
+```
+
+For Bash, set the same variable with `export PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001`. On Linux, `npx playwright install --with-deps chromium` also installs browser system dependencies.
+
+The regular suite uses controlled API fixtures and direct query-cache checks. The separate live suite creates classes, sets leading-zero IDs, reserves, confirms, cancels, reapplies and waits for real expiry through the UI without network mocking. It checks persistence, history, seat counts and disabled expired payment controls.
+
+Remove only this disposable project from the repository root:
+
+```sh
+docker compose -p admissions-e2e -f docker-compose.yml -f docker-compose.e2e.yml down --volumes --remove-orphans
+```
+
+Keep the explicit project name when starting or cleaning up. The frontend GitHub Actions workflow runs these same checks on an isolated hosted runner after a repository push; hosted execution is not yet verified locally.

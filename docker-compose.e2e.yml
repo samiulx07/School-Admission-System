@@ -1,0 +1,22 @@
+# Disposable live-browser stack. Requires Docker Compose 2.24.4 or newer.
+# Always use the dedicated project name, including during cleanup:
+# docker compose -p admissions-e2e -f docker-compose.yml -f docker-compose.e2e.yml up --build --wait frontend
+# docker compose -p admissions-e2e -f docker-compose.yml -f docker-compose.e2e.yml down --volumes --remove-orphans
+services:
+  backend:
+    environment:
+      Admission__HoldDurationSeconds: "20"
+      HOLD_DURATION_SECONDS: "20"
+      Cors__FrontendOrigin: http://127.0.0.1:3001
+    ports: !override
+      - "127.0.0.1:8081:8080"
+
+  frontend:
+    build:
+      args:
+        SITE_URL: http://127.0.0.1:3001
+    environment:
+      API_BASE_URL: http://backend:8080
+      SITE_URL: http://127.0.0.1:3001
+    ports: !override
+      - "127.0.0.1:3001:3000"
