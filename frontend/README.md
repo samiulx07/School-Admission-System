@@ -22,3 +22,14 @@ npm run build
 ```
 
 Reusable visual components, layouts, menus and main views have paired `.tsx` and `.module.scss` files. Keep page entrypoints thin. Use imported React Icons; authored SVG markup/assets are excluded. Client identity belongs in Context, while server state and request cancellation belong in TanStack Query and Axios.
+
+The `/student` page validates and remembers a 17-digit registration number. Changing or clearing it cancels private requests and clears student-specific caches. Blocked browser storage keeps the current tab usable.
+
+With the Docker app running, install Chromium once and run the identity checks:
+
+```sh
+npx playwright install chromium
+npx playwright test tests/student-identity.spec.ts tests/student-queries.spec.ts
+```
+
+Set `PLAYWRIGHT_BASE_URL` to test a different running frontend. Browser tests use fresh browser contexts; query-isolation checks run directly against TanStack Query.
