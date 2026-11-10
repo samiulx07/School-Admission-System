@@ -16,6 +16,7 @@ test("debounces case-insensitive class search and can clear it", async ({ page }
   await page.goto("/classes");
   const register = page.getByRole("list", { name: "Classes and seat availability", exact: true });
   await expect(register.getByRole("article")).toHaveCount(3);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1_000));
   await page.getByRole("searchbox", { name: "Search classes", exact: true }).fill("  SCIENCE  ");
   await expect(page.getByRole("main").getByRole("status").filter({ hasText: /^Updating results\.\.\.$/ })).toHaveText("Updating results...");
   await expect(register.getByRole("article")).toHaveCount(3);
