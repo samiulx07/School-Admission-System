@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { CreateClassView } from "@/mainViews/CreateClassView";
+import { CreateClassView } from "@/mainViews/CreateClassView/CreateClassView";
 import { socialImages } from "@/shared/utils/siteMetadata";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "Create a class",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { StudentView } from "@/mainViews/StudentView";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { StudentView } from "@/mainViews/StudentView/StudentView";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "Student registration number",

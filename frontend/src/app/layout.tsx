@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
 import { site } from "@/data/site";
-import { SiteLayout } from "@/layouts/SiteLayout";
-import { AppProviders } from "@/shared/contexts/AppProviders";
+import { SiteLayout } from "@/layouts/SiteLayout/SiteLayout";
+import { AppProviders } from "@/shared/contexts/AppProviders/AppProviders";
 import { getSiteUrl } from "@/shared/utils/siteUrl";
 import { socialImages, websiteStructuredData } from "@/shared/utils/siteMetadata";
 import { manrope } from "./fonts";

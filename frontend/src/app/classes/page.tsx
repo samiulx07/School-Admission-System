@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ClassesView } from "@/mainViews/ClassesView";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { ClassesView } from "@/mainViews/ClassesView/ClassesView";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "Classes",

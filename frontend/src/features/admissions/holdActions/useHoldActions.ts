@@ -6,7 +6,7 @@ import { cancelHold, confirmHold, holdActionError, type HoldAction } from "@/ser
 import { useApiClient } from "@/shared/hooks/useApiClient";
 import { useStudentIdentity } from "@/shared/hooks/useStudentIdentity";
 import { studentQueryKey } from "@/features/admissions/identity/studentQueries";
-import styles from "./HoldActions.module.scss";
+import styles from "./HoldActions/HoldActions.module.scss";
 
 type ActionVariables = { action: HoldAction; holdId: string; studentId: string; identitySignal: AbortSignal };
 type ActionFeedback = ActionVariables & { kind: "success" | "error"; message: string };

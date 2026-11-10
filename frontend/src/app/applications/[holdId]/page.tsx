@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { ApplicationDetailView } from "@/mainViews/ApplicationDetailView";
+import { ApplicationDetailView } from "@/mainViews/ApplicationDetailView/ApplicationDetailView";
 import { readPublicApplication } from "@/services/publicAdmissions.server";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export async function generateMetadata({ params }: { params: Promise<{ holdId: string }> }): Promise<Metadata> {
   const { holdId } = await params;

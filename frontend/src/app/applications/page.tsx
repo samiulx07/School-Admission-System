@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { ApplicationHistoryView } from "@/mainViews/ApplicationHistoryView";
+import { ApplicationHistoryView } from "@/mainViews/ApplicationHistoryView/ApplicationHistoryView";
 import { socialImages } from "@/shared/utils/siteMetadata";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "Your applications",

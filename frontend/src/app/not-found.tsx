@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { NotFoundView } from "@/mainViews/NotFoundView";
-import { PageTransition } from "@/shared/components/PageTransition";
+import { NotFoundView } from "@/mainViews/NotFoundView/NotFoundView";
+import { PageTransition } from "@/shared/components/PageTransition/PageTransition";
 
 export const metadata: Metadata = {
   title: "Page not found",
