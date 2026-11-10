@@ -34,6 +34,24 @@ Start with **Create class**, then **Classes** to reserve a place using your save
 
 PostgreSQL uses a named volume; ordinary `docker compose down` preserves data. `docker compose down --volumes` deliberately deletes local database data. To start just the backend and its dependencies, use `docker compose up --build -d backend`.
 
+### Windows with Docker inside WSL
+
+Pass your repository's WSL path to `--cd`. For example, a checkout at `G:\test\school-admission-system` uses `/mnt/g/test/school-admission-system`.
+
+From PowerShell:
+
+```powershell
+wsl.exe -d Ubuntu-24.04 --cd /mnt/g/test/school-admission-system --exec docker compose up --build
+```
+
+From Git Bash, disable its automatic path conversion for this command:
+
+```bash
+MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 --cd /mnt/g/test/school-admission-system --exec docker compose up --build
+```
+
+Keep the foreground command running while using the app; press Ctrl+C to stop it. If WSL reports `ERROR_PATH_NOT_FOUND` only in Git Bash, first check that the conversion-disabling prefix is present.
+
 ## Frontend
 
 The frontend uses pinned Next.js 16 / React 19 dependencies, React Bootstrap, Sass modules, Context and TanStack Query with Axios. Forms use React Hook Form and Zod. React Select, Day.js, React Datepicker, Radix Slider, use-debounce, React Icons, react-scroll, react-tooltip, and SweetAlert2 support the admission workflows. Its toolchain uses Node 26 LTS and npm 12. TypeScript and ESLint versions match the framework's lint peer constraints.
