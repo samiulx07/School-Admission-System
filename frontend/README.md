@@ -44,7 +44,7 @@ After setting a student number, choose **Reserve a place** in the register. `/ap
 
 For an owned, unexpired hold, **Pay fee & confirm** simulates successful fee payment and confirms admission; no money is collected. **Cancel hold** releases a pending place. Both actions ask for a decision and disable opposing actions while pending. Run `npx playwright test tests/hold-actions.spec.ts` for lifecycle, ownership, error and race checks.
 
-**My applications** opens the current student's history at `/applications`. Filter by status, class and inclusive application dates in this device's timezone. The catalogue also supports debounced name search and an available-seat range. Run `npx playwright test tests/history.spec.ts tests/filters.spec.ts` for history isolation, filtering, polling and keyboard checks.
+**My applications** opens the current student's history at `/applications`. Open **Filter applications** to load optional status, class and inclusive application-date controls. Dates use this device's timezone. The catalogue also supports debounced name search and an available-seat range. Run `npx playwright test tests/history.spec.ts tests/filters.spec.ts` for history isolation, filtering, polling and keyboard checks.
 
 ## Complete browser verification
 

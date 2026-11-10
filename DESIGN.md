@@ -90,6 +90,26 @@ The catalogue is an aligned register, not a wall of identical promotional cards.
 
 Removed marketing feature cards, fixed fake admission statistics, decorative school illustrations and hard-coded ten-minute claims. Availability proportions, application status and the deadline derive from backend data. The interface should be recognizable from its class register, board-green type and purposeful capacity signals rather than effects.
 
-## Verification plan
+## Verification
 
-Check every required workflow against the actual backend. Verify restoration and identity switching, three-second seat refresh, countdown/expiry, action conflicts, loading/empty/error states and responsive keyboard use. Run production-build browser QA at least twice with desktop, phone and reduced motion. Inspect screenshots, axe results, console/network errors, focus and performance. Use a fresh independent critic for each design pass. Keep screenshots/reports ignored; record actual outcomes and remaining limits honestly.
+Verification covers every required workflow against the actual backend, identity restoration and switching, three-second seat refresh, countdown/expiry, action conflicts, loading/empty/error states and responsive keyboard use. Production browser review includes desktop, phone and reduced motion, with fresh independent critics. Screenshots and raw reports remain ignored.
+
+### Recorded production results, 10 November 2026
+
+Two complete production browser passes covered home, classes, application history, class creation, student identity, application details and the custom 404. The final pass contained 174 screenshots, including desktop, phone, keyboard, hover and reduced-motion states. All seven page reports had zero browser errors, overflow, serious accessibility violations, invisible focus stops or hidden reduced-motion text. The metadata/resource audit crawled five routes and reported zero failures and zero warnings; the additional 404 and application-detail types were checked separately in the browser.
+
+| Page type | Throttled phone LCP | Layout shift |
+| --- | ---: | ---: |
+| Home | 1,044 ms | 0 |
+| Classes | 984 ms | 0.012 |
+| Application history | 948 ms | 0.015 |
+| Create class | 1,012 ms | 0 |
+| Student identity | 976 ms | 0 |
+| 404 | 848 ms | 0 |
+| Application details | 960 ms | 0.005 |
+
+These are observed local Chromium measurements with CPU/network throttling and isolated real database fixtures, not a guarantee for other deployments. Recorded phone scrolling was 60-61 FPS. The heaviest audited route was classes at about 362 KB total, including 299 KB gzipped JavaScript. Optional history controls and the occupancy animation engine load on demand.
+
+React view transitions settle content over 240 ms; reduced motion removes that animation. A supplementary native-browser probe confirmed the actual arrival/departure animations, since the standard screenshot script samples navigation first at 300 ms. The deadline remains a functional clock rather than a decorative motion effect.
+
+A fresh evidence-only critic reviewed every final screenshot and rated the overall visual result 7.0/10, with accessibility, performance and responsive design at 8/10. The remaining visual opportunities are more distinctive branding, shorter introductions before mobile tasks and stronger feedback on subtle text links. These are recorded limitations, not a claim of award-level design.
