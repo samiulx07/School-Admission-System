@@ -14,6 +14,7 @@ export type StudentHold = HoldDetails & { className: string };
 
 // A monotonic deadline stays accurate if the device's wall clock changes.
 export type TimedHold = {
+  serverBootstrap?: boolean;
   hold: HoldDetails;
   requestStartedAt: number;
   receivedAt: number;

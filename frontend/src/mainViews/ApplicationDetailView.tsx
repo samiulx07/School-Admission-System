@@ -10,15 +10,14 @@ import { useHoldCountdown } from "@/features/admissions/holds/useHoldCountdown";
 import { useHoldClass, useHoldDetails } from "@/features/admissions/holds/useHoldDetails";
 import { useStudentHolds } from "@/features/admissions/holds/useStudentHolds";
 import { useStudentIdentity } from "@/shared/hooks/useStudentIdentity";
+import { LocalDateTime } from "@/shared/components/LocalDateTime";
+import type { HoldDetails } from "@/shared/types/holds";
+import type { ClassSummary } from "@/shared/types/classes";
 import styles from "./ApplicationDetailView.module.scss";
 
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-}
-
-export function ApplicationDetailView({ holdId }: { holdId: string }) {
-  const application = useHoldDetails(holdId);
-  const admissionClass = useHoldClass(application.data?.hold.classId);
+export function ApplicationDetailView({ holdId, initialHold, initialClass }: { holdId: string; initialHold?: HoldDetails; initialClass?: ClassSummary }) {
+  const application = useHoldDetails(holdId, initialHold);
+  const admissionClass = useHoldClass(application.data?.hold.classId, initialClass);
   const studentHolds = useStudentHolds();
   const identity = useStudentIdentity();
   const { status, countdown } = useHoldCountdown(application.data);
@@ -52,8 +51,8 @@ export function ApplicationDetailView({ holdId }: { holdId: string }) {
               <h2 id="application-record-heading">Application record</h2>
               <dl>
                 <div><dt>Application number</dt><dd className={styles.identifier}>{hold.holdId}</dd></div>
-                <div><dt>Created</dt><dd><time dateTime={hold.createdAt}>{formatDate(hold.createdAt)}</time></dd></div>
-                <div><dt>Hold deadline</dt><dd><time dateTime={hold.expiresAt}>{formatDate(hold.expiresAt)}</time></dd></div>
+                <div><dt>Created</dt><dd><LocalDateTime value={hold.createdAt} /></dd></div>
+                <div><dt>Hold deadline</dt><dd><LocalDateTime value={hold.expiresAt} /></dd></div>
               </dl>
               {admissionClass.isError && <p className={styles.note}>The class name could not load. Your application status is shown above.</p>}
               <div className={styles.identity}>
@@ -68,8 +67,8 @@ export function ApplicationDetailView({ holdId }: { holdId: string }) {
               <span className={styles.clockLabel}><BsClock aria-hidden="true" />{status === "HELD" ? "Time to decide" : "Application status"}</span>
               <h2 id="decision-heading">{status === "HELD" ? "Your place is waiting." : status === "CONFIRMED" ? "A place secured." : status === "EXPIRED" ? "This hold has ended." : "This application is closed."}</h2>
               {(status === "HELD" || status === "EXPIRED") && <p className={styles.countdown} aria-label={`Time remaining ${countdown}`}>{countdown}</p>}
-              <p className={styles.decisionNote}>{status === "HELD" ? "Confirm before the timer reaches zero. An expired hold releases its place automatically." : status === "CONFIRMED" ? "Confirmed admissions are final." : "Return to the class register to see the latest availability."}</p>
-              <HoldActions holdId={holdId} status={status} owned={owned} expired={status === "EXPIRED"} isOwnershipLoading={!identity.isReady || identity.isChanging || Boolean(identity.studentId && studentHolds.isPending)} />
+              <p className={styles.decisionNote}>{status === "HELD" ? "Confirm before the timer ends." : status === "CONFIRMED" ? "Confirmed admissions are final." : "Return to the class register to see the latest availability."}</p>
+              <HoldActions holdId={holdId} status={status} owned={owned} expired={status === "EXPIRED"} isOwnershipLoading={!identity.isReady || identity.isChanging || Boolean(identity.studentId && studentHolds.isPending) || Boolean(application.data?.serverBootstrap)} />
               <p className={styles.paymentNote}>Demo fee payment. No money is collected.</p>
             </aside>
           </div>

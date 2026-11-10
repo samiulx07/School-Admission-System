@@ -9,7 +9,7 @@ export const holdQueryKeys = {
 };
 
 const timestampSchema = z.iso.datetime({ offset: true }).refine(value => Number.isFinite(Date.parse(value)), "Invalid application timestamp.");
-const holdSchema = z.object({
+export const holdSchema = z.object({
   holdId: z.uuid(),
   classId: z.uuid(),
   status: z.enum(["HELD", "CONFIRMED", "EXPIRED", "CANCELLED"]),
