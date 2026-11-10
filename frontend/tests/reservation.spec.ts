@@ -47,7 +47,7 @@ test("reserves using the captured student header and opens the application", asy
   await expect(page).toHaveURL(`/applications/${holdId}`);
   expect(sentStudent).toBe(studentId);
   await expect(page.getByText("This application belongs to your current student number.", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Payment unavailable" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Pay fee & confirm" })).toBeEnabled();
 });
 
 for (const failure of [
@@ -73,7 +73,7 @@ test("expires at the server deadline without a reload and keeps payment disabled
   await page.goto(`/applications/${holdId}`);
   await expect(page.getByText("Hold expired", { exact: true })).toBeVisible({ timeout: 3_000 });
   await expect(page.getByLabel("Time remaining 00:00", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Payment unavailable" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Pay fee & confirm" })).toBeDisabled();
 });
 
 test("uses the server clock and accounts conservatively for response latency", async ({ page }) => {
@@ -97,7 +97,7 @@ test("rejects an invalid server timestamp before showing application decisions",
   await page.goto(`/applications/${holdId}`);
   await expect(page.getByRole("main").getByRole("alert")).toContainText("Application details could not load");
   await expect(page.getByText("Place held", { exact: true })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Payment unavailable" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Pay fee & confirm" })).toHaveCount(0);
 });
 
 test("does not navigate for a late reservation after the student number changes", async ({ page }) => {

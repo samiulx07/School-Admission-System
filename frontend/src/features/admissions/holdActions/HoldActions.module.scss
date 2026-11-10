@@ -1,0 +1,14 @@
+.root { margin-block: 24px; }
+.actions { display: flex; flex-direction: column; gap: 12px; }
+.actions button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+.cancel, .dialogCancel { --bs-btn-color: var(--color-ink); --bs-btn-border-color: var(--color-line); --bs-btn-hover-color: var(--color-ink); --bs-btn-hover-bg: var(--color-ground); --bs-btn-hover-border-color: var(--color-ink); }
+.note, .error, .success { margin-block: 16px 0; font-size: 14px; line-height: 1.6; }
+.note { color: var(--color-muted); }
+.error { padding: 14px 16px; color: var(--color-error); border-left: 3px solid var(--color-error); background: var(--color-surface); }
+.success { padding: 14px 16px; background: var(--color-accent); color: var(--color-ink); border-radius: var(--radius); }
+.dialog.dialog { border: 1px solid var(--color-line); border-radius: var(--radius); color: var(--color-ink); font-family: var(--bs-font-sans-serif); padding: 30px; }
+.dialogTitle.dialogTitle { padding: 0; font-size: 28px; line-height: 1.2; font-weight: 650; letter-spacing: -0.045em; }
+.dialogText.dialogText { color: var(--color-muted); margin: 20px 0 0; font-size: 16px; line-height: 1.6; }
+.dialogActions.dialogActions { display: flex; gap: 12px; width: 100%; margin-top: 28px; }
+.dialogActions button { flex: 1; min-width: 44px; }
+@media (max-width: 575px) { .dialog.dialog { padding: 24px; } .dialogActions.dialogActions { flex-direction: column; } .dialogActions button { width: 100%; } }

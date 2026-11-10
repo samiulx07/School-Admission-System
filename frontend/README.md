@@ -39,3 +39,5 @@ The `/classes` register polls every three seconds while active, displays all fou
 Use **Create class** in the navigation to open `/admin/classes/new`. Enter a class name and positive whole-number capacity; successful creation links back to the catalogue. Run `npx playwright test tests/class-creation.spec.ts` for validation, pending, success and service-error checks.
 
 After setting a student number, choose **Reserve a place** in the register. `/applications/{holdId}` shows the public status and deadline, and checks ownership against the current student's history. Its countdown uses server time and a monotonic browser clock. Run `npx playwright test tests/reservation.spec.ts` for reservation, expiry and identity-switch checks.
+
+For an owned, unexpired hold, **Pay fee & confirm** simulates successful fee payment and confirms admission; no money is collected. **Cancel hold** releases a pending place. Both actions ask for a decision and disable opposing actions while pending. Run `npx playwright test tests/hold-actions.spec.ts` for lifecycle, ownership, error and race checks.

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import { BsArrowLeft, BsArrowClockwise, BsClock } from "react-icons/bs";
 import { HoldStatusLabel } from "@/features/admissions/holds/HoldStatusLabel";
+import { HoldActions } from "@/features/admissions/holdActions/HoldActions";
 import { holdErrorMessage } from "@/features/admissions/holds/holdErrors";
 import { useHoldCountdown } from "@/features/admissions/holds/useHoldCountdown";
 import { useHoldClass, useHoldDetails } from "@/features/admissions/holds/useHoldDetails";
@@ -68,8 +69,8 @@ export function ApplicationDetailView({ holdId }: { holdId: string }) {
               <h2 id="decision-heading">{status === "HELD" ? "Your place is waiting." : status === "CONFIRMED" ? "A place secured." : status === "EXPIRED" ? "This hold has ended." : "This application is closed."}</h2>
               {(status === "HELD" || status === "EXPIRED") && <p className={styles.countdown} aria-label={`Time remaining ${countdown}`}>{countdown}</p>}
               <p className={styles.decisionNote}>{status === "HELD" ? "Confirm before the timer reaches zero. An expired hold releases its place automatically." : status === "CONFIRMED" ? "Confirmed admissions are final." : "Return to the class register to see the latest availability."}</p>
-              <Button disabled className={styles.payment}>Payment unavailable</Button>
-              <p className={styles.paymentNote}>Payment is a confirmation step. No real payment is collected.</p>
+              <HoldActions holdId={holdId} status={status} owned={owned} expired={status === "EXPIRED"} isOwnershipLoading={!identity.isReady || identity.isChanging || Boolean(identity.studentId && studentHolds.isPending)} />
+              <p className={styles.paymentNote}>Demo fee payment. No money is collected.</p>
             </aside>
           </div>
         </>
