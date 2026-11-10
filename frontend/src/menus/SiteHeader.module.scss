@@ -5,6 +5,8 @@
   display: flex; min-height: 94px; justify-content: space-between; padding-block: 16px; gap: 20px;
 }
 .navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.collapse { flex-grow: 0; }
+.toggle { min-width: 48px; min-height: 48px; border: 1px solid var(--color-line); color: var(--color-ink); font-size: 26px; }
 .link {
   display: inline-flex; min-height: 44px; align-items: center; padding: 8px 12px;
   border-radius: var(--radius); color: var(--color-muted); font-size: 14px; font-weight: 650; text-decoration: none; white-space: nowrap;
@@ -13,9 +15,10 @@
   &:hover { color: var(--color-ink); background: var(--color-accent); transform: translateY(-2px); }
   &:active { transform: translateY(0); }
 }
-@media (max-width: 575px) {
-  .inner.inner { min-height: 84px; flex-wrap: wrap; align-items: flex-start; gap: 10px; }
-  .navigation { width: 100%; gap: 4px; }
-  .link { padding-inline: 8px; font-size: 13px; }
+@media (max-width: 991px) {
+  .inner.inner { min-height: 84px; flex-wrap: wrap; gap: 10px; }
+  .collapse { width: 100%; }
+  .navigation { width: 100%; align-items: stretch; flex-direction: column; gap: 4px; padding-block: 8px; }
+  .link { padding-inline: 12px; font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .link:hover, .link:active { transform: none; } }

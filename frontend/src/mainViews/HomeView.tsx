@@ -1,4 +1,5 @@
 import { BsArrowDown, BsCheck2, BsClock } from "react-icons/bs";
+import Link from "next/link";
 import { site } from "@/data/site";
 import { AnchorLink } from "@/shared/components/AnchorLink";
 import styles from "./HomeView.module.scss";
@@ -11,7 +12,8 @@ export function HomeView() {
           <p className={styles.eyebrow}>School admissions, clearly</p>
           <h1 id="home-heading">Find your class.<br />Hold your place.</h1>
           <p className={styles.lead}>See what is available, reserve a place, and confirm your next step before your hold expires.</p>
-          <AnchorLink className="btn btn-primary" target="how-it-works">How admission works <BsArrowDown aria-hidden="true" /></AnchorLink>
+          <Link className="btn btn-primary" href="/classes">Explore available classes <BsArrowDown aria-hidden="true" /></Link>
+          <p className={styles.helper}><AnchorLink target="how-it-works">How admission works</AnchorLink></p>
           <p className={styles.helper}>One registration number connects your applications.</p>
         </div>
         <aside className={styles.guide} aria-labelledby="guide-heading">

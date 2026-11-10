@@ -2,5 +2,5 @@ import type { MetadataRoute } from "next";
 import { getSiteUrl } from "@/shared/utils/siteUrl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: getSiteUrl(), changeFrequency: "weekly" }];
+  return [{ url: getSiteUrl(), changeFrequency: "weekly" }, { url: `${getSiteUrl()}/classes`, changeFrequency: "daily" }];
 }
