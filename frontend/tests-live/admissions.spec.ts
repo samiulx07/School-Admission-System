@@ -76,7 +76,10 @@ test("creates a class, preserves a leading-zero student number and persists a co
   expect((await confirmed).status()).toBe(200);
   await expect(page.getByText("Admission confirmed", { exact: true })).toBeVisible();
 
-  await page.reload();
+  const documentResponse = await page.reload();
+  const initialHtml = await documentResponse!.text();
+  expect(initialHtml).toContain(`>${application.className}</h1>`);
+  expect(initialHtml).not.toContain(application.studentId);
   await expect(page).toHaveURL(applicationUrl);
   await expect(page.getByText("Admission confirmed", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Pay fee & confirm", exact: true })).toBeDisabled();
