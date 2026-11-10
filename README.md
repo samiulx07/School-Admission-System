@@ -2,9 +2,11 @@
 
 A concurrency-safe admission API and React portal for reserving and confirming limited school seats.
 
-## Development status
+## Application
 
-The backend implementation and local completion review are finished. All eight endpoints, concurrency rules, autonomous expiry and persistence checks pass. Frontend implementation follows in small feature commits; the complete assignment review remains pending that phase. Supabase connectivity awaits the user's separately supplied credentials.
+The backend and frontend implement class creation, live seat availability, temporary reservations, simulated fee confirmation, cancellation, and student application history. Enter a 17-digit birth registration number in the input at the top of any page; the dedicated student page also manages and clears the saved number.
+
+The backend was completed and reviewed before frontend implementation. Work is recorded in small feature commits. Supabase connectivity awaits the user's separately supplied credentials; the local Docker application and tests require no cloud account.
 
 The backend solution now contains Domain, Application, Infrastructure, and API projects, plus separate unit and PostgreSQL integration test projects. Package versions are centrally pinned and restore lockfiles are committed.
 
@@ -18,29 +20,29 @@ dotnet format backend/SchoolAdmission.slnx --no-restore --verify-no-changes
 
 `/health/live` checks that the HTTP host is running; `/health/ready` verifies the database schema and applied migrations.
 
-## Run the backend with Docker
+## Run with Docker
 
 Use current Docker Engine or Docker Desktop with Compose v2. On Windows with a WSL-only engine, keep the WSL distribution running while using the application.
 
 ```sh
-docker compose up --build -d backend
+docker compose up --build --wait
 ```
 
-This starts PostgreSQL 18.6, applies the committed EF migrations once, then starts the API at `http://localhost:8080`. The frontend is added after the backend completion review. No private environment file or cloud account is required for this local mode. PostgreSQL uses a named volume; ordinary `docker compose down` preserves data. `docker compose down --volumes` deliberately deletes local database data.
+Open the frontend at **http://localhost:3000**. The API is available at **http://localhost:8080**. Compose starts PostgreSQL 18.6, applies the committed EF migrations, and waits for healthy backend and frontend services. A fresh clone needs only Docker with Compose; no private environment file is required.
 
-## Frontend foundation
+Start with **Create class**, then **Classes** to reserve a place using your saved student number. Open the reservation to confirm its simulated fee or cancel it. **My applications** keeps previous and current applications. No real money is collected.
 
-The frontend uses pinned Next.js 16 / React 19 dependencies, React Bootstrap, Sass modules, Context and TanStack Query. Its toolchain uses Node 26 LTS and npm 12. TypeScript and ESLint versions match the framework's current lint peer constraints.
+PostgreSQL uses a named volume; ordinary `docker compose down` preserves data. `docker compose down --volumes` deliberately deletes local database data. To start just the backend and its dependencies, use `docker compose up --build -d backend`.
 
-Start the complete local Docker stack with:
+## Frontend
 
-```sh
-docker compose up --build -d
-```
+The frontend uses pinned Next.js 16 / React 19 dependencies, React Bootstrap, Sass modules, Context and TanStack Query with Axios. Forms use React Hook Form and Zod. React Select, Day.js, React Datepicker, Radix Slider, use-debounce, React Icons, react-scroll, react-tooltip, and SweetAlert2 support the admission workflows. Its toolchain uses Node 26 LTS and npm 12. TypeScript and ESLint versions match the framework's lint peer constraints.
 
-Open `http://localhost:3000`; the backend remains at `http://localhost:8080`. The initial frontend foundation provides the shared shell, navigation, metadata, designed 404, and server API proxy. Student identity and admission workflows follow in subsequent feature commits.
+Seat counts refresh every three seconds. Holds use a server-calibrated countdown, and payment is disabled when a hold expires. Saved identity survives reloads; changing it cancels private requests and clears the previous student's cache. Loading, empty, conflict, unavailable-service and retry states accompany the features. Search, available-seat ranges, and history filters are optional conveniences.
 
 The frontend reads `API_BASE_URL` on the server at request time. Its Docker default is `http://backend:8080`; use that hostname in the root Compose `.env` file. Native frontend development defaults to `http://localhost:8080`. Browser requests use same-origin `/api`, keeping database configuration out of the client. Docker Compose passes `FRONTEND_ORIGIN` into the frontend build for canonical, social image and sitemap URLs; rebuild the frontend image after changing it. Native builds use `SITE_URL`, defaulting to `http://localhost:3000`. See [frontend development](frontend/README.md) for native checks.
+
+## Tests
 
 Run the isolated backend tests with Docker:
 
@@ -56,7 +58,19 @@ docker compose --profile test rm --stop --force backend-tests test-api test-api-
 
 Tests use their own temporary PostgreSQL database and API processes, without resetting development data. Coverage includes domain lifecycle rules, schema constraints, HTTP contracts, and capacity/duplicate safety across two API processes. The capacity test sends 100 simultaneous requests for 10 seats and requires exactly 10 successful holds.
 
-The backend GitHub Actions workflow runs the same Docker test command on relevant pushes and pull requests. It needs no cloud credentials. Hosted CI execution can be verified after the repository is pushed.
+For frontend checks, use the pinned Node/npm versions in `frontend/.nvmrc` and `frontend/package.json`. From `frontend`:
+
+```sh
+npm ci
+npm run lint
+npm run typecheck
+```
+
+The [complete browser verification instructions](frontend/README.md#complete-browser-verification) start a separate `admissions-e2e` Docker project at ports 3001/8081, then run the regular Playwright suite and real UI-to-API-to-PostgreSQL flows. Keep its explicit project name when cleaning up; its database is separate from development. The live suite uses 20-second holds and real responses, including natural expiry.
+
+Latest recorded verification passed **58 backend tests** (29 unit and 29 integration), **68 frontend checks**, and **three real admission flows**, without skips. Frontend checks include identity isolation, validation, polling, filtering, lifecycle actions, and browser recovery. Real flows cover confirmation and reload, cancellation and reapplication, and expiry with disabled payment and released seats.
+
+Backend and frontend GitHub Actions workflows contain the same verification commands and need no cloud credentials. Hosted CI execution is not claimed; it can be checked after the repository is pushed.
 
 ## Supabase development configuration
 
@@ -75,7 +89,7 @@ Copy the exact session-pooler hostname and username from your project's Connect 
 Opt into your Supabase database explicitly:
 
 ```sh
-docker compose -f docker-compose.yml -f docker-compose.supabase.yml up --build -d backend
+docker compose -f docker-compose.yml -f docker-compose.supabase.yml up --build -d
 ```
 
 The override requires both private connection strings and removes the local database dependency. There is no automatic database fallback. Cloud connectivity awaits the user's separately supplied development credentials.
@@ -130,7 +144,7 @@ Additional local checks passed API restart, startup expiry recovery observed thr
 
 - ASP.NET Core, Entity Framework Core, Npgsql, and PostgreSQL.
 - Supabase PostgreSQL for private development; self-contained local PostgreSQL for evaluation and tests.
-- Next.js, TypeScript, React Bootstrap, React Context, and component-scoped SCSS for the subsequent frontend phase.
+- Next.js, TypeScript, React Bootstrap, React Context, TanStack Query and component-scoped SCSS for the frontend.
 
 ## Repository conventions
 
