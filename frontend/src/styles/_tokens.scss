@@ -1,0 +1,22 @@
+:root {
+  --color-ground: #f2f5f3;
+  --color-ink: #183e3b;
+  --color-muted: #566b65;
+  --color-line: #d5dfda;
+  --color-accent: #c7edac;
+  --color-held: #f1c978;
+  --color-surface: #fff;
+  --color-error: #a42d2d;
+  --radius: 12px;
+  --content-width: 1240px;
+  --gutter: clamp(24px, 4vw, 40px);
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --bs-font-sans-serif: var(--font-manrope), Arial, sans-serif;
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-color: var(--color-ink);
+  --bs-body-bg: var(--color-ground);
+  --bs-border-color: var(--color-line);
+  --bs-link-color: var(--color-ink);
+  --bs-link-hover-color: var(--color-ink);
+  --bs-border-radius: var(--radius);
+}

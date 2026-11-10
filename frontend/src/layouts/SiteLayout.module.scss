@@ -1,0 +1,7 @@
+.layout { display: flex; min-height: 100svh; flex-direction: column; }
+.main { flex: 1; &:focus { outline: none; } }
+.skipLink {
+  position: fixed; z-index: 1000; top: 16px; left: var(--gutter); padding: 12px 18px;
+  color: var(--color-surface); background: var(--color-ink); border-radius: var(--radius); transform: translateY(-160%);
+  &:focus { color: var(--color-surface); transform: translateY(0); }
+}

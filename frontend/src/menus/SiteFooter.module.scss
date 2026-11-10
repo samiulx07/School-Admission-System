@@ -1,0 +1,20 @@
+@use "../styles/mixins";
+.footer { margin-top: 88px; border-top: 1px solid var(--color-line); }
+.inner {
+  @include mixins.container;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; padding-block: 40px;
+  p { margin: 12px 0 0; color: var(--color-muted); font-size: 13px; }
+}
+.details { text-align: right; }
+.link {
+  display: inline-flex; min-height: 44px; align-items: center; color: var(--color-ink); font-size: 14px; font-weight: 650;
+  transition: transform 180ms var(--ease-settle);
+  &:hover { transform: translateY(-2px); }
+  &:active { transform: translateY(0); }
+}
+@media (max-width: 575px) {
+  .footer { margin-top: 56px; }
+  .inner { flex-direction: column; padding-block: 32px; gap: 20px; }
+  .details { text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) { .link:hover, .link:active { transform: none; } }

@@ -28,6 +28,20 @@ docker compose up --build -d backend
 
 This starts PostgreSQL 18.6, applies the committed EF migrations once, then starts the API at `http://localhost:8080`. The frontend is added after the backend completion review. No private environment file or cloud account is required for this local mode. PostgreSQL uses a named volume; ordinary `docker compose down` preserves data. `docker compose down --volumes` deliberately deletes local database data.
 
+## Frontend foundation
+
+The frontend uses pinned Next.js 16 / React 19 dependencies, React Bootstrap, Sass modules, Context and TanStack Query. Its toolchain uses Node 26 LTS and npm 12. TypeScript and ESLint versions match the framework's current lint peer constraints.
+
+Start the complete local Docker stack with:
+
+```sh
+docker compose up --build -d
+```
+
+Open `http://localhost:3000`; the backend remains at `http://localhost:8080`. The initial frontend foundation provides the shared shell, navigation, metadata, designed 404, and server API proxy. Student identity and admission workflows follow in subsequent feature commits.
+
+The frontend reads `API_BASE_URL` on the server at request time. Its Docker default is `http://backend:8080`; use that hostname in the root Compose `.env` file. Native frontend development defaults to `http://localhost:8080`. Browser requests use same-origin `/api`, keeping database configuration out of the client. Docker Compose passes `FRONTEND_ORIGIN` into the frontend build for canonical, social image and sitemap URLs; rebuild the frontend image after changing it. Native builds use `SITE_URL`, defaulting to `http://localhost:3000`. See [frontend development](frontend/README.md) for native checks.
+
 Run the isolated backend tests with Docker:
 
 ```sh
@@ -53,7 +67,7 @@ SUPABASE_DB_CONNECTION_STRING=Host=<session-pooler-host>;Port=5432;Database=post
 SUPABASE_MIGRATION_CONNECTION_STRING=<migration-role connection string with SSL Mode=VerifyFull>
 HOLD_DURATION_SECONDS=600
 FRONTEND_ORIGIN=http://localhost:3000
-API_BASE_URL=http://localhost:8080
+API_BASE_URL=http://backend:8080
 ```
 
 Copy the exact session-pooler hostname and username from your project's Connect panel. Use verified TLS; store optional certificates under ignored `.local/certs`, mount the trusted CA, and add `Root Certificate=<container path>` if your connection requires a custom root. Supabase API keys are unnecessary because only the backend connects to PostgreSQL.
