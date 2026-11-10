@@ -84,7 +84,7 @@ Footer:      [Seatwise / school admissions]      [Classes / applications]
 404:         [This place is not on the register] [Return to classes]
 ```
 
-The catalogue is an aligned register, not a wall of identical promotional cards. Detail is a focused decision workspace. The creation form uses a calmer split composition. Every reusable visual component, layout, menu and main view has its colocated `.tsx` and `.module.scss` pair.
+The catalogue is an aligned register, not a wall of identical promotional cards. Detail is a focused decision workspace. The creation form uses a calmer split composition. Every visual component has its own named directory containing its `.tsx` and `.module.scss` pair, consistently across layouts, main views, menus, shared components and features. Context providers also have dedicated directories without artificial stylesheets. Pure hooks and helpers stay grouped by responsibility, while Next.js route files keep their required locations.
 
 ## Genericness check
 

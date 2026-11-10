@@ -21,7 +21,32 @@ npm run typecheck
 npm run build
 ```
 
-Reusable visual components, layouts, menus and main views have paired `.tsx` and `.module.scss` files. Keep page entrypoints thin. Use imported React Icons; authored SVG markup/assets are excluded. Client identity belongs in Context, while server state and request cancellation belong in TanStack Query and Axios.
+## Component organization
+
+Each React component outside `app/` has its own named directory. Visual components keep their `.tsx` and `.module.scss` files together, including layouts, main views, menus, shared components and feature components:
+
+```text
+src/
+  layouts/SiteLayout/
+    SiteLayout.tsx
+    SiteLayout.module.scss
+  mainViews/HomeView/
+    HomeView.tsx
+    HomeView.module.scss
+  menus/SiteHeader/
+    SiteHeader.tsx
+    SiteHeader.module.scss
+  shared/components/Brand/
+    Brand.tsx
+    Brand.module.scss
+  features/admissions/identity/StudentIdentityForm/
+    StudentIdentityForm.tsx
+    StudentIdentityForm.module.scss
+```
+
+Import components directly with both the directory and filename, for example `@/mainViews/HomeView/HomeView`. Context providers such as `shared/contexts/AppProviders/AppProviders.tsx` also have their own directories; nonvisual providers do not need empty stylesheets. Pure hooks, services, utilities and context definitions remain grouped by responsibility.
+
+Next.js route entrypoints such as `app/page.tsx` and `app/layout.tsx` retain their framework-required locations and stay thin. Use imported React Icons; authored SVG markup/assets are excluded. Client identity belongs in Context, while server state and request cancellation belong in TanStack Query and Axios.
 
 The `/student` page validates and remembers a 17-digit registration number. Changing or clearing it cancels private requests and clears student-specific caches. Blocked browser storage keeps the current tab usable.
 
