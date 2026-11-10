@@ -1,5 +1,5 @@
 @use "../styles/mixins";
-.view { @include mixins.container; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: start; padding-block: clamp(44px, 7vw, 84px) 88px; }
+.view { @include mixins.container; display: grid; min-height: calc(100svh - 150px); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: start; padding-block: clamp(44px, 7vw, 84px) 88px; }
 .introduction { padding-top: 4px; }
 .back { display: inline-flex; gap: 10px; align-items: center; min-height: 44px; margin-bottom: 30px; color: var(--color-muted); font-size: 14px; text-decoration: underline; transition: transform 180ms var(--ease-settle); }
 .back:hover { transform: translateX(-3px); }

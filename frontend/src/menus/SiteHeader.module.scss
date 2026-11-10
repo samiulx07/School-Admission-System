@@ -16,7 +16,7 @@
   &:active { transform: translateY(0); }
 }
 @media (max-width: 991px) {
-  .inner.inner { min-height: 84px; flex-wrap: wrap; gap: 10px; }
+  .inner.inner { min-height: 72px; padding-block: 10px; flex-wrap: wrap; gap: 10px; }
   .collapse { width: 100%; }
   .navigation { width: 100%; align-items: stretch; flex-direction: column; gap: 4px; padding-block: 8px; }
   .link { padding-inline: 12px; font-size: 14px; }

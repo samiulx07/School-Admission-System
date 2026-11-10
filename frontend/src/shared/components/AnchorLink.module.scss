@@ -1,1 +1,7 @@
-.link { display: inline-flex; align-items: center; justify-content: center; gap: 16px; text-decoration: none; }
+.link {
+  display: inline-flex; min-height: 24px; align-items: center; justify-content: center; gap: 16px; text-decoration: underline;
+  transition: transform 180ms var(--ease-settle);
+  &:hover { transform: translateY(-2px); }
+  &:active { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .link:hover, .link:active { transform: none; } }

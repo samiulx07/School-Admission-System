@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { StudentView } from "@/mainViews/StudentView";
+import { PageTransition } from "@/shared/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Student registration number",
@@ -9,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function StudentPage() {
-  return <StudentView />;
+  return <PageTransition><StudentView /></PageTransition>;
 }

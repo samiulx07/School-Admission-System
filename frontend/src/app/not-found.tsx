@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NotFoundView } from "@/mainViews/NotFoundView";
+import { PageTransition } from "@/shared/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -7,4 +8,4 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function NotFoundPage() { return <NotFoundView />; }
+export default function NotFoundPage() { return <PageTransition><NotFoundView /></PageTransition>; }

@@ -7,7 +7,6 @@
 .freshness { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--color-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .liveDot, .staleDot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: var(--color-ink); }
 .staleDot { background: var(--color-error); }
-.register { margin: 0; border-bottom: 1px solid var(--color-line); padding: 0; list-style: none; }
 .state {
   border-block: 1px solid var(--color-line); padding: 64px 24px; text-align: center;
   > svg { margin-bottom: 20px; color: var(--color-muted); font-size: 30px; }

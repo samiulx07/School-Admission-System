@@ -56,7 +56,6 @@ export function StudentIdentityBar() {
         </div>
         <p id={`${id}-help`} className={styles.help}>Your 17-digit birth registration number. Keep leading zeros.</p>
         <div className={styles.messages} aria-live="polite" aria-atomic="true">
-          {!isReady ? <p className={styles.notice}>Restoring your Student ID...</p> : null}
           {errors.studentId ? <p id={`${id}-error`} className={styles.error} role="alert">{errors.studentId.message}</p> : null}
           {storageStatus === "unavailable" ? <p className={styles.notice}>ID stays in this tab because browser storage is unavailable. It may be lost after reload.</p> : null}
           {storageStatus === "invalid" ? <p className={styles.notice}>The saved ID was invalid. Enter your 17-digit Student ID again.</p> : null}

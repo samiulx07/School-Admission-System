@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ClassesView } from "@/mainViews/ClassesView";
+import { PageTransition } from "@/shared/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Classes",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function ClassesPage() {
-  return <ClassesView />;
+  return <PageTransition><ClassesView /></PageTransition>;
 }

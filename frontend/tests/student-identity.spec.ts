@@ -19,7 +19,7 @@ test("validates exact ASCII digits, preserves leading zeros, changes and clears 
     await field.fill(invalid);
     await save.click();
     await expect(field).toHaveAttribute("aria-invalid", "true");
-    await expect(page.getByText("Current registration number", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("main").getByText("Not set", { exact: true })).toBeVisible();
   }
   await field.fill(firstStudent);
   await save.click();
