@@ -28,6 +28,7 @@ export function SiteHeader() {
           }}>
             <Link className={styles.link} onClick={closeMenu} href="/" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
             <Link className={styles.link} onClick={closeMenu} href="/classes" aria-current={pathname === "/classes" ? "page" : undefined}>Classes</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/admin/classes/new" aria-current={pathname === "/admin/classes/new" ? "page" : undefined}>Create class</Link>
             <Link className={styles.link} onClick={closeMenu} href="/student" aria-current={pathname === "/student" ? "page" : undefined}>{studentId ? "Student number set" : "Set student number"}</Link>
           </nav>
         </Navbar.Collapse>

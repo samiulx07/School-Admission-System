@@ -35,3 +35,5 @@ npx playwright test tests/student-identity.spec.ts tests/student-queries.spec.ts
 Set `PLAYWRIGHT_BASE_URL` to test a different running frontend. Browser tests use fresh browser contexts; query-isolation checks run directly against TanStack Query.
 
 The `/classes` register polls every three seconds while active, displays all four seat counts, and retains the last counts with a warning if refresh fails. Run `npx playwright test tests/catalogue.spec.ts tests/navigation.spec.ts` for polling, recovery, reduced-motion and phone-menu checks. These tests use controlled API fixtures.
+
+Use **Create class** in the navigation to open `/admin/classes/new`. Enter a class name and positive whole-number capacity; successful creation links back to the catalogue. Run `npx playwright test tests/class-creation.spec.ts` for validation, pending, success and service-error checks.

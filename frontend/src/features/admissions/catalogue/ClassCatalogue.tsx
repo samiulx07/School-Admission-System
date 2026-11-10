@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Button from "react-bootstrap/Button";
 import { BsArrowClockwise, BsExclamationCircle, BsJournal } from "react-icons/bs";
 import { ClassRow } from "./ClassRow";
@@ -51,6 +52,7 @@ export function ClassCatalogue() {
           <BsJournal aria-hidden="true" />
           <h3>No classes on the register yet</h3>
           <p>Create a class to open the first places for applications.</p>
+          <Link href="/admin/classes/new" className="btn btn-primary">Create a class</Link>
         </div>
       )}
 
