@@ -30,6 +30,15 @@ docker compose up --build --wait
 
 Open the frontend at **http://localhost:3000**. The API is available at **http://localhost:8080**. Compose starts PostgreSQL 18.6, applies the committed EF migrations, and waits for healthy backend and frontend services. A fresh clone needs only Docker with Compose; no private environment file is required.
 
+| Local address | Purpose |
+| --- | --- |
+| [Frontend](http://localhost:3000) | Complete admission workflow in the browser |
+| [Swagger UI](http://localhost:8080/swagger) | Browse API contracts and execute requests |
+| [OpenAPI JSON](http://localhost:8080/openapi/v1.json) | Import the API definition into compatible tools |
+| [Readiness](http://localhost:8080/health/ready) | Check database connectivity and applied migrations |
+
+The API root `/` returns `404`. Use `/swagger` for interactive documentation or `/classes` for class data. Follow the [Swagger walkthrough](#try-the-admission-workflow-in-swagger) to create, reserve, cancel and confirm an admission.
+
 Start with **Create class**, then **Classes** to reserve a place using your saved student number. Open the reservation to confirm its simulated fee or cancel it. **My applications** keeps previous and current applications. No real money is collected.
 
 PostgreSQL uses a named volume; ordinary `docker compose down` preserves data. `docker compose down --volumes` deliberately deletes local database data. To start just the backend and its dependencies, use `docker compose up --build -d backend`.
@@ -88,7 +97,7 @@ The [complete browser verification instructions](frontend/README.md#complete-bro
 
 Latest recorded verification passed **62 backend tests** (29 unit and 33 integration), **69 frontend checks**, and **four real admission flows**, without skips. Backend coverage includes four documentation checks for Swagger assets, configuration, operation contracts, schemas and examples. Frontend checks include identity isolation, validation, polling, filtering, lifecycle actions, large-capacity phone layouts, and browser recovery. Real flows cover confirmation and reload, cancellation and reapplication, expiry with disabled payment and released seats, and closing the entire browser before reopening the same isolated profile to recover a held application.
 
-Backend and frontend GitHub Actions workflows contain the same verification commands and need no cloud credentials. Hosted CI execution is not claimed; it can be checked after the repository is pushed. The local repository has no Git remote configured; publication to a public GitHub repository and submission of its link have not been verified.
+Backend and frontend GitHub Actions workflows contain the same verification commands and need no cloud credentials. The project and its feature commit history are published on the `main` branch. Review hosted workflow results in the repository's Actions tab. The verification totals above describe the recorded local runs. [GitHub repository](https://github.com/samiulx07/School-Admission-System), [GitHub Actions](https://github.com/samiulx07/School-Admission-System/actions).
 
 ## Supabase development configuration
 
@@ -125,9 +134,11 @@ To author a new migration, restore the pinned EF tool with `dotnet tool restore`
 
 ## Implemented API
 
-Interactive API documentation is available at **http://localhost:8080/swagger** after Docker startup. The generated OpenAPI document is available at **http://localhost:8080/openapi/v1.json**. Swagger includes controls for trying requests against the running API.
+Interactive API documentation is available at **http://localhost:8080/swagger** after Docker startup. The generated OpenAPI document is available at **http://localhost:8080/openapi/v1.json**. Swagger includes all eight admission operations and both health endpoints, with request examples, response schemas, status codes, validation rules and lifecycle behavior. **Try it out** sends real requests to the running API, so successful writes persist in the selected database.
 
-Docker enables documentation by default. Set `API_DOCUMENTATION_ENABLED=false` to disable it in Compose. For native development, documentation defaults to enabled in the `Development` environment. Set `ApiDocumentation__Enabled=true` or `false` explicitly to override that default in any environment.
+Docker enables documentation by default. Set `API_DOCUMENTATION_ENABLED=false` in the ignored root `.env` file and rerun `docker compose up --build --wait` to disable it. For native development, documentation defaults to enabled in the `Development` environment. Set `ApiDocumentation__Enabled=true` or `false` explicitly to override that default in any environment. Native API URLs use the host's listening port. Set `ASPNETCORE_URLS=http://localhost:8080` before starting the native API to use the addresses shown here.
+
+Supply `X-Student-Id` in Swagger's parameter field when reserving, confirming, cancelling or reading student history. Use exactly 17 ASCII digits and the same number for an application's owner actions. Class reads and hold-status reads are public. Successful cancellation returns `204` with an empty response body.
 
 ### Try the admission workflow in Swagger
 
