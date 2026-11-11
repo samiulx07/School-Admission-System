@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "react-bootstrap/Navbar";
-import { BsList, BsX } from "react-icons/bs";
+import { BsGrid, BsHouseDoor, BsJournalText, BsList, BsPerson, BsPlusCircle, BsX } from "react-icons/bs";
 import { Brand } from "@/shared/components/Brand/Brand";
 import { useStudentIdentity } from "@/shared/hooks/useStudentIdentity";
 import { StudentIdentityBar } from "@/features/admissions/identity/StudentIdentityBar/StudentIdentityBar";
@@ -28,11 +28,11 @@ export function SiteHeader() {
           <nav className={styles.navigation} aria-label="Primary" onKeyDown={(event) => {
             if (event.key === "Escape") { closeMenu(); toggle.current?.focus(); }
           }}>
-            <Link className={styles.link} onClick={closeMenu} href="/" aria-current={pathname === "/" ? "page" : undefined}>Home</Link>
-            <Link className={styles.link} onClick={closeMenu} href="/classes" aria-current={pathname === "/classes" ? "page" : undefined}>Classes</Link>
-            <Link className={styles.link} onClick={closeMenu} href="/applications" aria-current={pathname.startsWith("/applications") ? "page" : undefined}>My applications</Link>
-            <Link className={styles.link} onClick={closeMenu} href="/admin/classes/new" aria-current={pathname === "/admin/classes/new" ? "page" : undefined}>Create class</Link>
-            <Link className={styles.link} onClick={closeMenu} href="/student" aria-current={pathname === "/student" ? "page" : undefined}>{studentId ? "Student number set" : "Set student number"}</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/" aria-current={pathname === "/" ? "page" : undefined}><BsHouseDoor aria-hidden="true" />Home</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/classes" aria-current={pathname === "/classes" ? "page" : undefined}><BsGrid aria-hidden="true" />Classes</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/applications" aria-current={pathname.startsWith("/applications") ? "page" : undefined}><BsJournalText aria-hidden="true" />My applications</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/admin/classes/new" aria-current={pathname === "/admin/classes/new" ? "page" : undefined}><BsPlusCircle aria-hidden="true" />Create class</Link>
+            <Link className={styles.link} onClick={closeMenu} href="/student" aria-current={pathname === "/student" ? "page" : undefined}><BsPerson aria-hidden="true" />{studentId ? "Student number set" : "Set student number"}</Link>
           </nav>
         </Navbar.Collapse>
       </Navbar>

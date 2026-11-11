@@ -1,12 +1,26 @@
 .brand {
-  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--color-ink);
-  font-size: 24px; font-weight: 750; letter-spacing: -0.06em; text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: var(--color-ink);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  text-decoration: none;
   transition: transform 180ms var(--ease-settle);
-  &:hover { color: var(--color-ink); transform: translateY(-2px); }
+
+  &:hover { color: var(--color-primary); transform: translateY(-2px); }
   &:active { transform: translateY(0); }
 }
 .mark {
-  display: grid; width: 34px; height: 34px; place-items: center; color: var(--color-accent);
-  background: var(--color-ink); border-radius: 10px; font-size: 17px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  color: var(--color-surface);
+  background: var(--color-primary);
+  border-radius: 10px;
+  font-size: 18px;
 }
 @media (prefers-reduced-motion: reduce) { .brand:hover, .brand:active { transform: none; } }

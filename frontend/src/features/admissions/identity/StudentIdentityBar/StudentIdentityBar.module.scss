@@ -1,41 +1,43 @@
 @use "../../../../styles/mixins";
 
-.bar { background: var(--color-surface); border-bottom: 1px solid var(--color-line); }
+.bar { background: var(--color-ink); color: var(--color-surface); }
 .inner {
   @include mixins.container;
   display: grid;
   grid-template-columns: max-content max-content minmax(0, 1fr);
   align-items: center;
   gap: 8px 16px;
-  padding-block: 12px;
+  padding-block: 10px;
 }
-.label { margin: 0; font-size: 13px; font-weight: 650; }
+.label { margin: 0; font-size: 12px; font-weight: 700; }
 .controls { display: flex; min-width: 0; align-items: center; gap: 8px; }
 .input {
-  width: 230px;
+  width: 224px;
   min-width: 0;
   min-height: 44px;
-  border-color: var(--color-line);
-  border-radius: var(--radius);
+  border-color: transparent;
+  border-radius: 7px;
+  background: var(--color-surface);
+  color: var(--color-ink);
   font-size: 16px;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.025em;
 }
-.input:focus { border-color: var(--color-ink); box-shadow: 0 0 0 3px rgb(24 62 59 / 14%); }
-.button.button { flex: 0 0 auto; min-width: 106px; min-height: 44px; padding: 9px 16px; font-size: 13px; white-space: nowrap; }
-.help { margin: 0; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
+.input:focus { border-color: #a9bcff; box-shadow: 0 0 0 3px rgb(169 188 255 / 28%); }
+.button.button { flex: 0 0 auto; min-width: 100px; min-height: 44px; padding: 9px 16px; border-radius: 7px; font-size: 12px; white-space: nowrap; }
+.button:focus-visible { outline-color: #c7d8ff; }
+.help { margin: 0; color: #bdc9db; font-size: 12px; line-height: 1.5; }
 .messages { grid-column: 1 / -1; min-width: 0; }
 .messages:empty { display: none; }
 .notice, .error, .feedback { margin: 0; font-size: 13px; line-height: 1.5; }
 .messages p + p { margin-top: 4px; }
-.notice { color: var(--color-muted); }
-.error { color: var(--color-error); }
-.feedback { color: var(--color-ink); }
-
+.notice { color: #bdc9db; }
+.error { color: #ffb9c2; }
+.feedback { color: #c7d8ff; }
 @media (max-width: 767px) {
-  .inner { grid-template-columns: minmax(0, 1fr); gap: 4px; padding-block: 8px; }
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 5px; padding-block: 10px; }
   .label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .controls { width: 100%; }
   .input { flex: 1 1 auto; width: 0; }
-  .help { margin-top: 0; font-size: 11px; }
+  .help { font-size: 11px; }
 }
