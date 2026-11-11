@@ -125,6 +125,10 @@ To author a new migration, restore the pinned EF tool with `dotnet tool restore`
 
 ## Implemented API
 
+Interactive API documentation is available at **http://localhost:8080/swagger** after Docker startup. The generated OpenAPI document is available at **http://localhost:8080/openapi/v1.json**. Swagger includes controls for trying requests against the running API.
+
+Docker enables documentation by default. Set `API_DOCUMENTATION_ENABLED=false` to disable it in Compose. For native development, documentation defaults to enabled in the `Development` environment. Set `ApiDocumentation__Enabled=true` or `false` explicitly to override that default in any environment.
+
 | Request | Result |
 | --- | --- |
 | `POST /classes` with `{ "name": "Class 6 - Morning", "totalSeats": 10 }` | `201` with `{id,name,totalSeats}` and a detail Location |

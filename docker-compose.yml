@@ -10,6 +10,7 @@ x-api: &api
     ConnectionStrings__Admissions: Host=db;Port=5432;Database=admissions;Username=admissions;Password=local-development-only;Maximum Pool Size=20;GSS Encryption Mode=Disable
     Admission__HoldDurationSeconds: ${HOLD_DURATION_SECONDS:-600}
     Cors__FrontendOrigin: ${FRONTEND_ORIGIN:-http://localhost:3000}
+    ApiDocumentation__Enabled: ${API_DOCUMENTATION_ENABLED:-true}
   depends_on:
     migrate:
       condition: service_completed_successfully
@@ -106,6 +107,7 @@ services:
       ConnectionStrings__Admissions: Host=test-db;Port=5432;Database=admissions_test;Username=admissions_test;Password=local-test-only;Maximum Pool Size=20;GSS Encryption Mode=Disable
       Admission__HoldDurationSeconds: 60
       Cors__FrontendOrigin: http://localhost:3000
+      ApiDocumentation__Enabled: "true"
     depends_on:
       test-migrate:
         condition: service_completed_successfully
@@ -119,6 +121,7 @@ services:
     environment:
       <<: *test-api-environment
       HTTP_PORTS: "8080;8081"
+      ApiDocumentation__Enabled: "false"
     depends_on:
       test-migrate:
         condition: service_completed_successfully

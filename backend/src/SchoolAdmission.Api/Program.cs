@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SchoolAdmission.Api.Configuration;
+using SchoolAdmission.Api.Documentation;
 using SchoolAdmission.Api.Errors;
 using SchoolAdmission.Api.Workers;
 using SchoolAdmission.Application.Classes;
@@ -56,6 +57,12 @@ if (!Uri.TryCreate(frontendOrigin, UriKind.Absolute, out var frontendUri)
 }
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(ApiBehaviorConfiguration.Configure);
+var apiDocumentationEnabled = builder.Configuration.GetValue<bool?>("ApiDocumentation:Enabled")
+    ?? builder.Environment.IsDevelopment();
+if (apiDocumentationEnabled)
+{
+    builder.Services.AddApiDocumentation();
+}
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
 builder.Services.AddScoped<ClassService>();
@@ -75,6 +82,10 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseCors();
+if (apiDocumentationEnabled)
+{
+    app.MapApiDocumentation();
+}
 app.MapControllers();
 app.MapGet("/health/live", () => Results.Ok(new { status = "healthy" }))
     .WithName("GetLiveness");
