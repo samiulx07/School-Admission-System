@@ -15,7 +15,7 @@ AI-generated work required corrections:
 
 Recorded local verification passed 29 backend unit tests and 29 PostgreSQL/HTTP integration tests, including 100 requests for 10 seats across two API processes on ports 8080/8081, duplicate requests, lifecycle races, and autonomous expiry without admission traffic. Restart and ordinary Compose down/up preserved data. Frontend verification passed 68 regular checks and four real browser-to-API-to-PostgreSQL flows covering confirmation/reload, cancellation/reapplication, natural expiry, and full browser shutdown/reopening with a persistent profile. Package audits reported no known vulnerabilities at that check. Two production visual passes covered seven page types; the final audit had zero failures or warnings. A fresh independent critic inspected all 174 final screenshots and scored the visual design overall 7.0/10; no award claim is made.
 
-GitHub Actions workflows contain repeatable checks; hosted CI execution and a GitHub push are not claimed. Private environment files, local plans, test artifacts and the assignment PDF are excluded from commits.
+GitHub Actions workflows contain repeatable checks. Codex pushed the project and its feature commit history to the user's public GitHub repository on `main` and verified that the remote commit matched the local commit. Hosted CI has no recorded runs at this review. Private environment files, local plans, test artifacts and the assignment PDF are excluded from commits.
 
 ## UI refresh, 11 November 2026
 
