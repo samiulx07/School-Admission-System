@@ -9,6 +9,8 @@ internal static class ApiDocumentation
         services.AddOpenApi("v1", options =>
         {
             options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1;
+            options.AddSchemaTransformer<AdmissionSchemaTransformer>();
+            options.AddOperationTransformer<AdmissionOperationTransformer>();
             options.AddDocumentTransformer((document, _, _) =>
             {
                 document.Info = new OpenApiInfo
@@ -17,7 +19,8 @@ internal static class ApiDocumentation
                     Version = "v1",
                     Description = "Create classes, inspect live capacity, reserve a seat, and manage student applications. " +
                         "A hold expires after the configured duration, which defaults to 600 seconds. " +
-                        "Student registration numbers are 17-digit strings with leading zeros preserved."
+                        "Student registration numbers are 17-digit strings with leading zeros preserved. " +
+                        "Use the IDs returned by your requests when trying the endpoints."
                 };
                 document.Servers = [new OpenApiServer { Url = "/" }];
                 return Task.CompletedTask;

@@ -88,7 +88,12 @@ if (apiDocumentationEnabled)
 }
 app.MapControllers();
 app.MapGet("/health/live", () => Results.Ok(new { status = "healthy" }))
-    .WithName("GetLiveness");
+    .WithName("GetLiveness")
+    .WithTags("Health")
+    .WithSummary("Check whether the API process is running")
+    .WithDescription("Returns 200 while the API process can handle requests. This check does not access the database.")
+    .Produces(StatusCodes.Status200OK, typeof(object), "application/json")
+    .ProducesProblem(StatusCodes.Status500InternalServerError);
 app.MapGet("/health/ready", async (AdmissionsDbContext database, CancellationToken cancellationToken) =>
 {
     try
@@ -109,7 +114,15 @@ app.MapGet("/health/ready", async (AdmissionsDbContext database, CancellationTok
     {
         return Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
     }
-});
+})
+    .WithName("GetReadiness")
+    .WithTags("Health")
+    .WithSummary("Check whether the API can serve database requests")
+    .WithDescription("Checks applied migrations and access to the application tables. Returns 200 when ready, " +
+        "or 503 with an empty body while the database or schema is unavailable.")
+    .Produces(StatusCodes.Status200OK, typeof(object), "application/json")
+    .Produces(StatusCodes.Status503ServiceUnavailable)
+    .ProducesProblem(StatusCodes.Status500InternalServerError);
 
 await app.RunAsync();
 return 0;
