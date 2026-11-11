@@ -18,10 +18,10 @@ export function ClassRow({ admissionClass }: { admissionClass: ClassSummary }) {
         </div>
         <div className={styles.capacity}>
           <OccupancyBand totalSeats={totalSeats} heldSeats={heldSeats} confirmedSeats={confirmedSeats} />
-          <dl className={styles.counts}>
+          <dl className={`${styles.counts} ${totalSeats >= 1_000 ? styles.largeCounts : ""}`}>
             <div><dt>Total seats</dt><dd>{totalSeats.toLocaleString("en")}</dd></div>
-            <div><dt>Held</dt><dd>{heldSeats.toLocaleString("en")}</dd></div>
             <div><dt>Confirmed</dt><dd>{confirmedSeats.toLocaleString("en")}</dd></div>
+            <div><dt>Held</dt><dd>{heldSeats.toLocaleString("en")}</dd></div>
             <div className={styles.available}><dt>Available</dt><dd>{availableSeats.toLocaleString("en")}</dd></div>
           </dl>
         </div>

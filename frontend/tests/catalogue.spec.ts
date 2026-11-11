@@ -32,6 +32,27 @@ test("shows real class data and all four seat counts", async ({ page }) => {
   await expect(classRow(page, "Language and literature").getByText("No places available", { exact: true })).toBeVisible();
 });
 
+test("keeps maximum-capacity seat counts readable on a narrow phone", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.route("**/api/classes", route => json(route, [{
+    ...initialClasses[0],
+    totalSeats: 2_147_483_647,
+    heldSeats: 0,
+    confirmedSeats: 0,
+    availableSeats: 2_147_483_647,
+  }]));
+  await page.goto("/classes");
+
+  const row = classRow(page);
+  await expectCount(row, "Total seats", "2,147,483,647");
+  await expectCount(row, "Available", "2,147,483,647");
+  for (const value of await row.locator("dd").all()) {
+    expect(await value.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+    expect((await value.boundingBox())!.height).toBeLessThan(30);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test("shows loading until the API responds and then the empty state", async ({ page }) => {
   let finish: (() => void) | undefined;
   const pending = new Promise<void>(resolve => { finish = resolve; });
