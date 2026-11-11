@@ -86,7 +86,7 @@ npm run typecheck
 
 The [complete browser verification instructions](frontend/README.md#complete-browser-verification) start a separate `admissions-e2e` Docker project at ports 3001/8081, then run the regular Playwright suite and real UI-to-API-to-PostgreSQL flows. Keep its explicit project name when cleaning up; its database is separate from development. The live suite uses 20-second holds and real responses, including natural expiry.
 
-Latest recorded verification passed **58 backend tests** (29 unit and 29 integration), **69 frontend checks**, and **four real admission flows**, without skips. Frontend checks include identity isolation, validation, polling, filtering, lifecycle actions, large-capacity phone layouts, and browser recovery. Real flows cover confirmation and reload, cancellation and reapplication, expiry with disabled payment and released seats, and closing the entire browser before reopening the same isolated profile to recover a held application.
+Latest recorded verification passed **62 backend tests** (29 unit and 33 integration), **69 frontend checks**, and **four real admission flows**, without skips. Backend coverage includes four documentation checks for Swagger assets, configuration, operation contracts, schemas and examples. Frontend checks include identity isolation, validation, polling, filtering, lifecycle actions, large-capacity phone layouts, and browser recovery. Real flows cover confirmation and reload, cancellation and reapplication, expiry with disabled payment and released seats, and closing the entire browser before reopening the same isolated profile to recover a held application.
 
 Backend and frontend GitHub Actions workflows contain the same verification commands and need no cloud credentials. Hosted CI execution is not claimed; it can be checked after the repository is pushed. The local repository has no Git remote configured; publication to a public GitHub repository and submission of its link have not been verified.
 
@@ -129,6 +129,45 @@ Interactive API documentation is available at **http://localhost:8080/swagger** 
 
 Docker enables documentation by default. Set `API_DOCUMENTATION_ENABLED=false` to disable it in Compose. For native development, documentation defaults to enabled in the `Development` environment. Set `ApiDocumentation__Enabled=true` or `false` explicitly to override that default in any environment.
 
+### Try the admission workflow in Swagger
+
+Open an operation, select **Try it out**, enter its parameters and select **Execute**. Use the UUIDs returned by your own requests when filling later path parameters. Response examples illustrate the JSON shapes.
+
+1. Execute **POST /classes** with the JSON below. Copy `id` from its `201` response as your `classId`.
+
+   ```json
+   {
+     "name": "Class 6 - Morning",
+     "totalSeats": 30
+   }
+   ```
+
+2. Execute **GET /classes**, then **GET /classes/{classId}** with the copied UUID. The new class initially has 30 available seats, zero held seats and zero confirmed seats.
+3. Execute **POST /classes/{classId}/holds** using that UUID and `00123456789012345` for `X-Student-Id`. Copy `holdId` from the `201` response. The hold has status `HELD` and an `expiresAt` deadline.
+4. Execute **GET /holds/{holdId}** with the copied hold UUID to inspect its status and timestamps.
+5. Execute **DELETE /holds/{holdId}** using the same Student ID before the deadline. Success is `204` with an empty body, and the seat becomes available again. Repeating this cancellation with the same Student ID also returns `204`.
+6. Execute **POST /classes/{classId}/holds** again with the same class and Student ID. Copy the new `holdId` from the response.
+7. Execute **POST /holds/{holdId}/confirm** with the new hold UUID and the same Student ID before its deadline. Success returns `200` and `CONFIRMED`. Repeating this owner's confirmation returns the same successful result and allocates the seat once.
+8. Execute **GET /me/holds** using the same Student ID. History contains the cancelled application and the confirmed admission. **GET /classes/{classId}** shows the updated counts.
+
+The hold duration defaults to 600 seconds and is configurable. An expired hold returns a conflict when confirmed or cancelled. The response schema and examples for each operation describe its applicable errors. Student IDs are strings, including their leading zeros.
+
+### Error responses
+
+Errors use `application/problem+json` with `title`, HTTP `status`, stable `code`, and `traceId`. A readable `detail` describes application errors. JSON and parameter binding errors can include an `errors` dictionary containing messages by field.
+
+| Status | Applicable codes |
+| --- | --- |
+| `400` | `invalid_class`, `invalid_student_id`, `validation_failed` |
+| `403` | `hold_not_owned` |
+| `404` | `class_not_found`, `hold_not_found` |
+| `409` | `class_full`, `active_application_exists`, `hold_not_confirmable`, `hold_not_cancellable` |
+| `500` | `unexpected_error` |
+
+The readiness health endpoint also returns `503` with an empty body while the database or schema is unavailable.
+
+### Endpoint reference
+
 | Request | Result |
 | --- | --- |
 | `POST /classes` with `{ "name": "Class 6 - Morning", "totalSeats": 10 }` | `201` with `{id,name,totalSeats}` and a detail Location |
@@ -158,7 +197,7 @@ Invalid input returns `400`; changing another student's hold returns `403`; miss
 
 ## Backend completion checks
 
-The completion review passed 29 unit and 29 PostgreSQL/HTTP integration tests in Docker, with no skips. This includes 100-request capacity, duplicate-student, confirmation and cancellation workloads across two API processes, expiry boundaries after observed lock waits, and automatic persisted expiry without admission requests.
+The completion review passed 29 unit and 33 PostgreSQL/HTTP integration tests in Docker, with no skips. This includes 100-request capacity, duplicate-student, confirmation and cancellation workloads across two API processes, expiry boundaries after observed lock waits, automatic persisted expiry without admission requests, and OpenAPI/Swagger documentation contracts.
 
 Additional local checks passed API restart, startup expiry recovery observed through PostgreSQL, and ordinary Compose down/up persistence. The default duration was verified as 600 seconds; invalid duration fails startup. Release builds and formatting passed on the pinned SDK. A NuGet vulnerability audit found no vulnerable direct or transitive backend packages at this review.
 

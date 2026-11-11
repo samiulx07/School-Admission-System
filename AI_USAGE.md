@@ -26,3 +26,11 @@ Two independent visual critics reviewed separate production passes. Each complet
 An existing cross-tab test could fill a controlled input while its stored value was still restoring. The test now waits for that restored value. Five isolated repetitions and all 69 frontend checks passed, followed by four real PostgreSQL-backed admission flows. Running a build alongside an earlier browser check caused temporary resource connection resets. The affected page checks were repeated with builds complete and passed. Fresh visual evidence and raw test outputs remain in ignored local folders.
 
 The final independent critic inspected all 45 contact sheets, representing 174 screenshots, plus selected full-size originals. Its weighted visual estimate was 7.32/10, with usability at 8.0/10. It identified conventional branding and phone identity/preamble density as remaining visual opportunities. Functional test results and this evidence-limited visual judgment are documented separately in `DESIGN.md`.
+
+## API documentation, 11 November 2026
+
+Codex added ASP.NET Core OpenAPI generation and bundled Swagger UI, endpoint descriptions, documented Student ID headers, schemas, examples and a README walkthrough. Context7 supplied official ASP.NET Core transformer guidance, and the installed package references informed the implementation. Compiler diagnostics corrected response-interface updates and the obsolete schema example property before verification.
+
+The Docker run passed all 62 backend tests, comprising the original 58 tests and four documentation checks. Native process checks verified the Development and Production defaults and explicit availability overrides. A browser completed 13 requests through Swagger across all eight admission endpoints, including cancellation, reapplication, repeated confirmation, a lifecycle conflict, history and the final seat counts. The browser script initially selected the response table's heading cell. Selecting the result row corrected the assertion and the walkthrough passed with zero runtime errors or failed network requests.
+
+Documentation defaults to enabled in local Development and in the assignment's Docker configuration. Hosted environments can enable it through `ApiDocumentation__Enabled`. Dependency versions and restore lockfiles are pinned, and local evidence remains in ignored folders.
