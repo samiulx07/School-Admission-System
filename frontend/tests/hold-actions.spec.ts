@@ -165,7 +165,11 @@ test("identity switching aborts a pending decision and suppresses its previous s
   await expect.poll(() => traffic.actions).toBe(1);
   const otherTab = await context.newPage();
   await otherTab.goto("/student");
-  await otherTab.getByLabel("Student registration number", { exact: true }).fill(nextStudentId);
+  const registration = otherTab.getByLabel("Student registration number", { exact: true });
+  // Wait for the controlled form to finish restoring its saved value before editing it.
+  await expect(registration).toHaveValue(studentId);
+  await registration.fill(nextStudentId);
+  await expect(registration).toHaveValue(nextStudentId);
   await otherTab.getByRole("button", { name: "Update number" }).click();
   await expect(page.getByText("This application belongs to a different student number.", { exact: false })).toBeVisible();
   release();
