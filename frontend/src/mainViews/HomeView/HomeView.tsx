@@ -12,7 +12,7 @@ export function HomeView() {
           <p className={styles.eyebrow}>School admissions, clearly</p>
           <h1 id="home-heading">Find your class.<br />Hold your place.</h1>
           <p className={styles.lead}>See what is available, reserve a place, and confirm your next step before your hold expires.</p>
-          <Link className="btn btn-primary" href="/classes">Explore available classes <BsArrowRight aria-hidden="true" /></Link>
+          <Link className={`btn btn-primary ${styles.primary}`} href="/classes">Explore available classes <BsArrowRight aria-hidden="true" /></Link>
           <p className={styles.helper}><AnchorLink target="how-it-works">How admission works</AnchorLink></p>
           <p className={styles.helper}>One registration number connects your applications.</p>
         </div>
@@ -31,7 +31,7 @@ export function HomeView() {
       </section>
       <section className={styles.process} id="how-it-works" tabIndex={-1} aria-labelledby="process-heading">
         <div className={styles.processHeading}>
-          <h2 id="process-heading">From an open place<br />to your next classroom.</h2>
+          <h2 id="process-heading">From an open place to your next classroom.</h2>
           <p>Three steps, with a clear decision at the end. Keep your registration number ready when you apply.</p>
         </div>
         <ol className={styles.steps}>
