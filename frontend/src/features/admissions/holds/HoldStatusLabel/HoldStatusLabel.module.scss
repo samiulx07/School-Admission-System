@@ -1,4 +1,5 @@
-.status { display: inline-flex; width: fit-content; align-items: center; border-radius: 999px; padding: 7px 13px; font-size: 13px; font-weight: 700; }
-.held { color: var(--color-ink); background: var(--color-held); }
-.confirmed { color: var(--color-ink); background: var(--color-accent); }
-.expired, .cancelled { border: 1px solid var(--color-line); color: var(--color-muted); background: var(--color-surface); }
+.status { display: inline-flex; width: fit-content; align-items: center; gap: 7px; border: 1px solid transparent; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 750; }
+.status::before { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: currentColor; content: ""; }
+.held { color: #805510; background: var(--color-held); }
+.confirmed { color: var(--color-success); background: var(--color-success-soft); }
+.expired, .cancelled { border-color: var(--color-line); color: var(--color-muted); background: var(--color-ground); }

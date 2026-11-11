@@ -1,4 +1,16 @@
 @use "../../styles/mixins";
-.page { @include mixins.container; min-height: calc(100svh - 150px); padding-block: 64px 88px; }
-.introduction { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: 48px; margin-bottom: 48px; h1 { margin: 0; font-size: clamp(42px, 5vw, 68px); line-height: 1.08; letter-spacing: -.06em; } p { max-width: 35ch; margin: 0 0 4px; color: var(--color-muted); font-size: 18px; line-height: 1.6; } }
-@media (max-width: 767px) { .page { padding-block: 28px 48px; } .introduction { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-bottom: 24px; } .introduction h1 { font-size: 36px; } .introduction p { font-size: 16px; line-height: 1.5; } }
+
+.page { @include mixins.container; padding-block: 36px 8px; }
+.introduction {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 28px;
+
+  h1 { margin: 0; font-size: clamp(28px, 3vw, 36px); line-height: 1.2; letter-spacing: -0.04em; }
+  p { max-width: 70ch; margin: 0; color: var(--color-muted); font-size: 14px; }
+}
+@media (max-width: 767px) {
+  .page { padding-top: 24px; }
+  .introduction { margin-bottom: 22px; }
+  .introduction p { font-size: 13px; }
+}

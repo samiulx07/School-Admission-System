@@ -1,5 +1,5 @@
-.status { display: inline-flex; align-items: center; gap: 7px; width: fit-content; padding: 5px 11px; border: 1px solid var(--color-line); border-radius: 999px; font-size: 12px; font-weight: 700; }
+.status { display: inline-flex; align-items: center; gap: 7px; width: fit-content; padding: 5px 9px; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 750; }
 .status::before { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: currentColor; content: ""; }
-.held { border-color: var(--color-held); background: var(--color-held); color: var(--color-ink); }
-.confirmed { border-color: var(--color-ink); background: var(--color-ink); color: var(--color-surface); }
-.expired, .cancelled { background: var(--color-ground); color: var(--color-muted); }
+.held { background: var(--color-held); color: #805510; }
+.confirmed { background: var(--color-success-soft); color: var(--color-success); }
+.expired, .cancelled { border-color: var(--color-line); background: var(--color-ground); color: var(--color-muted); }

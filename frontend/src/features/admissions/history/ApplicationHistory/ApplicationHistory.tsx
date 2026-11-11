@@ -29,7 +29,7 @@ export function ApplicationHistory() {
   }
 
   return (
-    <section aria-labelledby="application-register-heading">
+    <section className={styles.panel} aria-labelledby="application-register-heading">
       <div className={styles.identity}>
         <div><span>Student registration number</span><strong>{identity.studentId}</strong></div>
         <Link href="/student">Change number</Link>
