@@ -1,4 +1,115 @@
-# Seatwise design direction
+# Seatwise UI refresh
+
+## Audit and direction, 11 November 2026
+
+The desktop and 390 px phone audit found five presentation issues.
+
+- Large headlines and long introductions pushed class availability and application actions down the page.
+- Similar green tones across the background, text, buttons and capacity bands weakened the visual hierarchy.
+- The header gave the identity form and primary navigation similar visual weight.
+- Records, filters and supporting instructions needed clearer surface boundaries.
+- Class actions appeared before the capacity information on a phone.
+
+The selected direction is a professional admissions workspace. The existing Next.js App Router, React Bootstrap, React Icons and colocated Sass modules support its responsive forms and records.
+
+## Concepts considered
+
+Scores use a 1 to 5 scale. A lower portability score indicates a closer connection to the admission subject.
+
+| Territory | Concept and anchor | Signature and intended feeling | Originality | Fit | Feasibility | Portability |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| School administration | Admissions desk. Treat classes, applications and identity as clearly separated working records. | Availability, capacity and the reservation action align within each class record. Organized and confident. | 4 | 5 | 5 | 2 |
+| Lifecycle process | Decision trail. Make the HELD, CONFIRMED, EXPIRED and CANCELLED lifecycle the organizing principle. | The deadline panel takes visual priority when a decision is due. Focused and reassuring. | 4 | 5 | 4 | 2 |
+| Identity | Student file. A registration number connects records across visits. | A persistent identity strip connects the navigation with owned applications. Personal and continuous. | 3 | 4 | 5 | 3 |
+
+Choose Admissions desk because finding a class and acting on a real application are the primary tasks. Deadline emphasis supports this direction in application details.
+
+## Concept card
+
+- Idea. A clear working space for choosing a class and completing an admission.
+- Metaphor. An orderly admissions desk with a class register and individual student records.
+- Signature. Each class aligns its name, live capacity distribution, four counts and action. The decision panel gives the actual deadline its own surface.
+- Emotion. Organized, dependable and immediately actionable.
+- Motion verb. Settle into place.
+- Screenshot. A compact page heading above a white class register, with blue available-seat counts and aligned reservation actions.
+
+## Visual system
+
+| Role | Value | Use |
+| --- | --- | --- |
+| Ground | `#F5F7FB` | Page background |
+| Ink | `#172740` | Text, identity strip and home introduction |
+| Muted | `#5C6C82` | Secondary text |
+| Line | `#DDE4EE` | Record and panel boundaries |
+| Primary | `#315BEA` | Main actions, active navigation and available-seat figures |
+| Surface | `#FFFFFF` | Forms and working records |
+
+Blue-tinted surfaces distinguish selected navigation and the countdown. Green identifies confirmed applications and open availability. Amber identifies temporary holds. Visible labels accompany each state.
+
+The existing locally served Manrope family supplies 28 to 38 px task headings, 38 to 58 px home display type, 16 px inputs, and compact readable record labels. Counts and identifiers use tabular figures. Main content uses a 1240 px maximum width with 20 to 40 px outer gutters. Panels use an 18 px radius, controls use 8 to 10 px radii, and a restrained shadow separates major surfaces.
+
+The composition follows each task.
+
+```text
+Shared header    [Student ID input + apply action + help]
+                 [Seatwise] [Home] [Classes] [Applications] [Create class] [Student]
+
+Home             [Dark introduction + browse action] [Application state guide]
+                 [Admission steps and deadline guidance]
+
+Classes          [Compact heading and explanation]
+                 [White register with search and capacity filter]
+                 [Name/status | capacity and four counts | reservation action]
+
+Applications     [Compact heading]
+                 [Current identity summary]
+                 [Filters and application records with status and next action]
+
+Application      [Back link, class name and status]
+                 [Application record] [Deadline and confirmation/cancellation]
+
+Create class     [Purpose and capacity guidance] [Class details form]
+Student          [Identity guidance] [Current number and editable form]
+404              [Centered recovery panel and home action]
+```
+
+Phones stack capacity before the reservation action. Application decisions appear before record metadata. Navigation keeps its existing accessible collapse control. Every component retains its dedicated folder and colocated stylesheet.
+
+The portal stays still at rest. Existing occupancy updates and page transitions provide data-driven movement. Hover, press, focus and reduced-motion treatments remain part of every interactive surface.
+
+## Implementation and verification
+
+The refresh changes Sass and presentation markup. Existing hooks, validation schemas, service requests, state transitions, polling, ownership checks and persistence remain the behavioral baseline for regression verification.
+
+Production builds, TypeScript and ESLint passed. All 69 frontend checks passed, including a new 320 px regression for the maximum supported capacity of 2,147,483,647 seats. Responsive stress checks covered 320, 390, 768, 1024 and 1920 px with a 200-character class name and large counts.
+
+Four real UI-to-PostgreSQL flows passed on the isolated production stack. They covered confirmation and reload, cancellation and reapplication, natural expiry with disabled payment and released capacity, and closing and reopening the entire browser to recover the same held application.
+
+Two complete production visual passes covered seven page types, with 174 screenshots per pass and a fresh independent critic for each pass. The first pass exposed register loading shifts of 0.168 for classes and 0.123 for applications on a phone. Reserved panel geometry and stable footer placement reduced those values to 0 and 0.003 in the final pass. The final reports contain zero browser errors, failed requests, overflow, small targets, axe violations, invisible sampled focus stops or hidden reduced-motion text. All sampled primary hover targets responded. The metadata audit reported zero failures and warnings across its five crawled routes. The application detail and 404 received separate browser checks.
+
+| Page type | Throttled phone LCP | Layout shift |
+| --- | ---: | ---: |
+| Home | 1,076 ms | 0 |
+| Classes | 1,108 ms | 0 |
+| Application history | 1,180 ms | 0.003 |
+| Create class | 1,200 ms | 0 |
+| Student identity | 1,392 ms | 0 |
+| Application detail | 1,040 ms | 0.006 |
+| 404 | 1,028 ms | 0.006 |
+
+These are local headless Chromium observations with a four-times CPU slowdown and slow-4G network simulation. Recorded phone scrolling was 58 to 60 FPS. The heaviest audited route was classes at about 364 KB, including 299 KB gzipped JavaScript. A direct browser probe confirmed the existing 240 ms arrival and 120 ms departure animations. Keyboard reports sample twelve focus stops and capture four focus frames per page.
+
+The review led to stronger active-hold actions and actual deadlines in history, larger operational metadata, capacity counts ordered with their band legend, shorter phone introductions, and class-creation guidance following the form on a phone. A dedicated two-column count layout handles large capacity values. The assignment's editable Student ID input appears at the top of every route.
+
+The cross-tab browser test now waits for the form's saved value before filling it. Its original timing could overlap asynchronous restoration and append to the restored value. Five isolated repetitions and the complete suite passed after synchronizing the test. Builds performed during an earlier browser run caused temporary resource connection resets. The affected pages were captured again with builds complete, and the final reports are clean.
+
+A fresh independent critic opened all 45 final contact sheets and inspected selected originals. Its weighted overall estimate was 7.32/10, with Design 7.1, Usability 8.0, Creativity 6.5 and Content 7.8. Remaining visual opportunities include a more distinctive register motif and more compact phone identity and introductory panels. The confirmation explanation could also sit closer to its primary action. These scores reflect the supplied local evidence and the critic's judgment.
+
+The previous review below records the earlier design.
+
+---
+
+# Previous design and verification record
 
 ## Brief
 
