@@ -24,7 +24,7 @@
 }
 .introduction h1 { margin-bottom: 18px; font-size: clamp(30px, 3.3vw, 42px); line-height: 1.22; letter-spacing: -0.04em; }
 .lead { max-width: 38ch; margin-bottom: 18px; color: var(--color-ink); font-size: 16px; line-height: 1.6; }
-.note { max-width: 42ch; color: var(--color-muted); font-size: 14px; }
+.note { max-width: 42ch; margin-bottom: 0; color: var(--color-muted); font-size: 14px; }
 @media (max-width: 900px) { .view { grid-template-columns: 1fr; max-width: 660px; gap: 24px; padding-top: 20px; } .back { margin-bottom: 18px; } }
-@media (max-width: 575px) { .introduction h1 { font-size: 30px; } .lead { font-size: 15px; } .note { font-size: 13px; } }
+@media (max-width: 575px) { .introduction h1 { margin-bottom: 12px; font-size: 30px; } .lead { margin-bottom: 12px; font-size: 14px; } .note { font-size: 13px; } .view { gap: 20px; } .back { margin-bottom: 12px; } }
 @media (prefers-reduced-motion: reduce) { .back:hover, .back:active { transform: none; } }

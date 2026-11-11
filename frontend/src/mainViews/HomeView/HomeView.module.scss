@@ -23,6 +23,7 @@
 .primary { display: inline-flex; align-items: center; gap: 14px; }
 .helper { margin: 14px 0 0; color: #c2cede; font-size: 12px; }
 .helper a { color: var(--color-surface); }
+.hero :focus-visible { outline-color: #c7d8ff; }
 .guide {
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 18%);

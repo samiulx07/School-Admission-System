@@ -15,7 +15,8 @@
   &:hover { color: var(--color-primary); transform: translateX(-3px); }
   &:active { transform: translateX(0); }
 }
-.layout { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; gap: clamp(32px, 5vw, 72px); }
+.layout { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); grid-template-rows: auto 1fr; align-items: start; gap: 24px clamp(32px, 5vw, 72px); }
+.form { grid-column: 2; grid-row: 1 / span 2; }
 .introduction {
   padding-top: 8px;
   h1 { margin-bottom: 18px; font-size: clamp(30px, 3.3vw, 42px); line-height: 1.22; letter-spacing: -0.04em; }
@@ -26,6 +27,7 @@
   align-items: flex-start;
   gap: 14px;
   max-width: 43ch;
+  grid-column: 1;
   padding: 22px;
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
@@ -38,7 +40,8 @@
 @media (max-width: 767px) {
   .page { padding-top: 16px; }
   .back { margin-bottom: 18px; }
-  .layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 24px; }
+  .form, .capacityNote { grid-column: auto; grid-row: auto; }
   .introduction { padding-top: 0; h1 { margin-bottom: 12px; font-size: 30px; } }
   .lead { max-width: none; margin-bottom: 18px; font-size: 14px; }
   .capacityNote { max-width: none; padding: 16px; }

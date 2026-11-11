@@ -10,7 +10,7 @@
   gap: 24px;
 }
 .navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.collapse { flex-grow: 0; }
+.collapse { flex-grow: 0; margin-left: auto; }
 .toggle { min-width: 44px; min-height: 44px; padding: 6px; border: 1px solid var(--color-line); border-radius: 10px; color: var(--color-ink); font-size: 26px; }
 .link {
   display: inline-flex;
@@ -34,7 +34,7 @@
 @media (max-width: 1199px) { .link { padding-inline: 10px; } }
 @media (max-width: 991px) {
   .inner.inner { min-height: 72px; padding-block: 10px; flex-wrap: wrap; gap: 10px; }
-  .collapse { width: 100%; }
+  .collapse { width: 100%; margin-left: 0; }
   .navigation { width: 100%; align-items: stretch; flex-direction: column; gap: 4px; padding-block: 8px; }
   .link { padding-inline: 14px; font-size: 14px; }
 }

@@ -17,10 +17,11 @@ export function ApplicationHistoryRow({ hold }: { hold: StudentHold }) {
         </div>
         <div className={styles.record}>
           <ApplicationStatus status={hold.status} />
+          {hold.status === "HELD" ? <p className={styles.deadline}>Decide before <time dateTime={hold.expiresAt}>{dayjs(hold.expiresAt).format("MMM D [at] h:mm A")}</time></p> : null}
           <p>Applied <time dateTime={hold.createdAt}>{dayjs(hold.createdAt).format("MMM D, YYYY [at] h:mm A")}</time></p>
         </div>
         <div className={styles.actions}>
-          <Link href={`/applications/${hold.holdId}`} className={styles.view}>{hold.status === "HELD" ? "Review hold" : "View application"}<span className="visually-hidden"> for {hold.className}</span><BsArrowRight aria-hidden="true" /></Link>
+          <Link href={`/applications/${hold.holdId}`} className={`${styles.view} ${hold.status === "HELD" ? styles.review : ""}`}>{hold.status === "HELD" ? "Review hold" : "View application"}<span className="visually-hidden"> for {hold.className}</span><BsArrowRight aria-hidden="true" /></Link>
           {isTerminal ? <Link href="/classes" className={styles.reapply}>Apply again<span className="visually-hidden"> for {hold.className}</span></Link> : null}
         </div>
       </article>
