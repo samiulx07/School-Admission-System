@@ -15,7 +15,6 @@ export function ClassRow({ admissionClass }: { admissionClass: ClassSummary }) {
           <span className={`${styles.availability} ${availableSeats === 0 ? styles.full : ""}`}>
             <span aria-hidden="true" />{availableSeats > 0 ? "Open for applications" : "No places available"}
           </span>
-          <ReserveSeatButton classId={id} availableSeats={availableSeats} />
         </div>
         <div className={styles.capacity}>
           <OccupancyBand totalSeats={totalSeats} heldSeats={heldSeats} confirmedSeats={confirmedSeats} />
@@ -26,6 +25,7 @@ export function ClassRow({ admissionClass }: { admissionClass: ClassSummary }) {
             <div className={styles.available}><dt>Available</dt><dd>{availableSeats.toLocaleString("en")}</dd></div>
           </dl>
         </div>
+        <div className={styles.action}><ReserveSeatButton classId={id} availableSeats={availableSeats} /></div>
       </article>
     </li>
   );

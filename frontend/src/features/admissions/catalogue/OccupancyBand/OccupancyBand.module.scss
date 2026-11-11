@@ -1,5 +1,5 @@
-.band { position: relative; height: 12px; overflow: hidden; border-radius: 3px; background: var(--color-accent); }
+.band { position: relative; height: 6px; overflow: hidden; border-radius: 999px; background: var(--color-available-band); }
 .confirmed, .held, .available { position: absolute; inset: 0; }
-.confirmed { z-index: 2; background: var(--color-ink); clip-path: inset(0 calc(100% - var(--confirmed-end)) 0 0); }
-.held { z-index: 1; background: var(--color-held); clip-path: inset(0 calc(100% - var(--occupied-end)) 0 var(--confirmed-end)); }
-.available { background: var(--color-accent); }
+.confirmed { z-index: 2; background: var(--color-confirmed-band); clip-path: inset(0 calc(100% - var(--confirmed-end)) 0 0); }
+.held { z-index: 1; background: var(--color-held-band); clip-path: inset(0 calc(100% - var(--occupied-end)) 0 var(--confirmed-end)); }
+.available { background: var(--color-available-band); }

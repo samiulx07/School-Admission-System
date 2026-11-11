@@ -1,18 +1,23 @@
 @use "../../styles/mixins";
-.page { @include mixins.container; }
+
+.page { @include mixins.container; padding-top: 36px; }
 .introduction {
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; gap: 64px; padding-block: 72px 56px;
-  h1 { margin: 0; font-size: clamp(46px, 5.4vw, 72px); line-height: 1.05; letter-spacing: -0.065em; }
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+
+  h1 { margin: 0; font-size: clamp(28px, 3vw, 36px); line-height: 1.2; letter-spacing: -0.04em; }
 }
 .description {
-  max-width: 48ch;
-  p { margin-bottom: 12px; color: var(--color-muted); font-size: 16px; }
-  p:first-child { color: var(--color-ink); font-size: 20px; font-weight: 600; letter-spacing: -0.03em; }
+  max-width: 78ch;
+  p { margin-bottom: 5px; color: var(--color-muted); font-size: 14px; }
+  p:first-child { color: var(--color-ink); font-size: 15px; font-weight: 500; }
   p:last-child { margin-bottom: 0; }
 }
-@media (max-width: 991px) { .introduction { grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: 32px; } }
 @media (max-width: 767px) {
-  .introduction { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 48px 40px; }
-  .introduction h1 { font-size: clamp(46px, 10vw, 64px); }
-  .description p:first-child { font-size: 18px; }
+  .page { padding-top: 24px; }
+  .introduction { margin-bottom: 22px; }
+  .description p { font-size: 13px; }
+  .description p:first-child { font-size: 14px; }
 }
