@@ -1,6 +1,6 @@
 @use "../../styles/mixins";
 
-.page { @include mixins.container; padding-block: 36px 8px; }
+.page { @include mixins.container; min-height: calc(100svh - 144px); padding-block: 36px 8px; }
 .introduction {
   display: grid;
   gap: 10px;
